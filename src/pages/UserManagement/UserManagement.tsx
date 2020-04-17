@@ -1,9 +1,5 @@
-import Typography from "@material-ui/core/Typography";
 import React, {FunctionComponent, useState} from "react";
 import './UserManagement.css'
-import {TabItem} from "../../components/Tab/TabItem/TabItem";
-import {Tab} from "../../components/Tab/Tab";
-import {Table} from "../../components/Table/Table";
 import {UserManagementList} from "../UserManagementList/UserManagementList";
 import {InviteUsers} from "../InviteUsers/InviteUsers";
 type UserManagementProps = {

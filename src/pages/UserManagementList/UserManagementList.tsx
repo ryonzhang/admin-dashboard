@@ -1,4 +1,3 @@
-import Typography from "@material-ui/core/Typography";
 import React, {FunctionComponent} from "react";
 import './UserManagementList.css'
 import {TabItem} from "../../components/Tab/TabItem/TabItem";
@@ -15,16 +14,16 @@ type UserManagementProps = {
 export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage}) =>
     <div className='user-management'>
         <div className='user-management-title'>
-            <text className='user-management-title-text'><b><FormattedMessage id={TEXT_ID.USER_MANAGEMENT} /></b></text>
+            <text className='user-management-title-text'><b><FormattedMessage id={TEXT_ID.USER_MANAGEMENT}/></b></text>
             <button className='user-management-invite-btn' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.INVITE_USERS)}}>
-                INVITE NEW USERS
+                <FormattedMessage id={TEXT_ID.INVITE_NEW_USERS}/>
             </button>
         </div>
         <div className='user-management-content'>
             <div className='user-management-panel'>
                 <Tab>
-                    <TabItem text='Active Users' selected={false}/>
-                    <TabItem text='Pending Users' selected={true}/>
+                    <TabItem textID={TEXT_ID.ACTIVE_USERS} selected={false}/>
+                    <TabItem textID={TEXT_ID.PENDING_USERS} selected={true}/>
                 </Tab>
                 <Table indexed={true} headers={['FULL NAME','EMAIL','ROLE','LAST LOGIN','TIME']} rows={[['Admin ClaroChile','admin.clarochile.staging@juvo.com','Admin','04/16/2020','06:21']]} actionText={'EDIT'}/>
             </div>

@@ -1,13 +1,18 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {Main} from "./pages/Main/Main";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import {textPool} from "./res/languages/lang";
+import {CustomContext} from "./contexts/custom-context";
 
 export default function App(props) {
+  const [locale,setLocale]=useState('es_CL');
+  const value ={locale,setLocale}
   return (
-      <IntlProvider locale={'en'} messages={textPool['es_CL']}>
-        <Main/>
-      </IntlProvider>
+      <CustomContext.Provider value={value}>
+        <IntlProvider messages={textPool[locale]}>
+          <Main/>
+        </IntlProvider>
+      </CustomContext.Provider>
   );
 }
 

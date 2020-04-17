@@ -8,6 +8,8 @@ import backIcon from '../../res/images/ic-back.svg'
 import {FormExample} from "../form";
 import {UserInputGroup} from "../../components/UserInputGroup/UserInputGroup";
 import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
+import {TEXT_ID} from "../../res/languages/lang";
+import {FormattedMessage } from "react-intl";
 type InviteUsersProps = {
     onSetActivePage: Function,
 }
@@ -16,15 +18,15 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
         <div className='invite-users'>
             <div className='invite-users-title' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)}}>
                 <img className='invite-users-icon' src={backIcon}/>
-                <text className='invite-users-title-text'><b>Return to User Management</b></text>
+                <text className='invite-users-title-text'><b><FormattedMessage id={TEXT_ID.RETURN_TO_USER_MANAGEMENT}/></b></text>
             </div>
             <div className='invite-users-content'>
 
                 <div className='invite-users-panel'>
                     <div className='invite-users-panel-title'>
-                        <text className='invite-users-panel-title-text'><b>Invite New Users</b></text>
+                        <text className='invite-users-panel-title-text'><b><FormattedMessage id={TEXT_ID.INVITE_NEW_USERS}/></b></text>
                         <button className='invite-users-invite-btn' >
-                            INVITE USERS
+                            <FormattedMessage id={TEXT_ID.INVITE_USERS}/>
                         </button>
                     </div>
                     <UserInputGroup/>
