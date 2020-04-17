@@ -80,6 +80,20 @@
     margin-left: 38px;
     margin-top:220px;
 }
+.login-submit-btn-disabled{
+    width: 335px;
+    height: 50px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #8fbaec;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    text-align: center;
+    color: white;
+    margin-left: 38px;
+    margin-top:220px;
+}
 .login-request-email{
     display: flex;
     flex-direction: column;
@@ -96,6 +110,7 @@
 }
 .login-request-email-subtitle{
     height: 22px;
+    width: 95%;
     font-size: 15px;
     line-height: 1.47;
     color: #8798ad;

@@ -7,7 +7,7 @@
 .info-modal-container{
     width: 672px;
     height: 470px;
-    border-radius: 4px;
+    border-radius: 1px;
     border-width: 0px !important;
     background-color:white;
     display: flex;

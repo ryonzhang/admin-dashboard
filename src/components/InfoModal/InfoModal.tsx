@@ -2,15 +2,16 @@ import React,{FunctionComponent} from 'react';
 import Modal from '@material-ui/core/Modal';
 import './InfoModal.css'
 import {Fade} from "@material-ui/core";
+import {FormattedMessage} from "react-intl";
 type ModalProps = {
     open:boolean,
     icon:string,
-    title:string,
-    subtitle:string,
+    titleTextID:string,
+    subtitleTextID:string,
 }
 
 
-export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,title,subtitle}) =>
+export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,titleTextID,subtitleTextID}) =>
     <Modal
         className='info-modal'
         open={open}
@@ -23,8 +24,8 @@ export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,title,subtit
         <Fade in={open}>
             <div className='info-modal-container'>
                 <img className='info-modal-icon' src={icon}/>
-                <text className='info-modal-title'>{title}</text>
-                <text className='info-modal-subtitle'>{subtitle}</text>
+                <text className='info-modal-title'><FormattedMessage id={titleTextID}/></text>
+                <text className='info-modal-subtitle'><FormattedMessage id={subtitleTextID}/></text>
             </div>
         </Fade>
     </Modal>
