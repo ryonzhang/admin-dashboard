@@ -1,0 +1,42 @@
+.table{
+    width:100%;
+}
+.table-header,.table-row{
+    text-align: left;
+
+}
+.table-header-cell{
+    padding:13px 30px 13px 30px;
+    width: 276px;
+    height: 18px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #9ea0a5;
+    border-top: 1px #eaedf3 solid;
+    border-bottom: 1px #eaedf3 solid;
+}
+.table-row-cell{
+    padding:15px 30px 15px 30px;
+    width: 184px;
+    height: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #6b6c6f;
+    border-bottom: 1px #eaedf3 solid;
+}
+.table-row-cell-indexed{
+    color: #3e3f42;
+}
+.table-row-action{
+    width: 100px;
+    height: 16px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    text-align: center;
+    color: #397cca;
+}
+.table-row-action-text{
+}

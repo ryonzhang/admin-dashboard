@@ -1,0 +1,10 @@
+.user-input-group{
+    display: flex;
+    flex-direction: row;
+    padding:17px 0px 23px 30px;
+    border-bottom: 1px #e0e0e0 solid;
+}
+.user-group-item{
+    padding-right:16px;
+}
+

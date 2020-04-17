@@ -1,0 +1,25 @@
+.tab-item{
+    width: 204px;
+    height: 45px;
+    text-align: center;
+    margin-top:22px;
+    padding:0px 28px 0px 28px;
+}
+.tab-item-text{
+    width: 113px;
+    height: 24px;
+    font-size: 20px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    text-align: center;
+}
+.tab-item-selected{
+    border-bottom: 3px #4a90e2 solid;
+    color: #282e34;
+}
+.tab-item-unselected{
+    color:#797676 ;
+}

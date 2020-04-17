@@ -1,0 +1,47 @@
+.user-management{
+    display: flex;
+    flex-direction:column;
+    height:100vh;
+}
+.user-management-title{
+    height: 49px;
+    margin-top:21px;
+    padding-left: 32px;
+    border-bottom: 1px #e6eaee solid;
+    display: flex;
+}
+.user-management-title-text{
+    width: 800px;
+    height: 28px;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.17;
+    color:#282e34;
+    flex-grow: 1;
+}
+.user-management-invite-btn{
+    width: 220px;
+    height: 36px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #397cca;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    color: white;
+    margin-right:31.5px;
+}
+.user-management-content{
+    background-color: #fbfbfb;
+    width:100%;
+}
+.user-management-panel{
+    background-color: white;
+    margin:30px;
+    border:1px #f0f0f0 solid;
+    border-radius: 5px;
+}
+
+
+
+

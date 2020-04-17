@@ -1,0 +1,29 @@
+.sidebar-item-container{
+    width: 270px;
+    height: 40px;
+    object-fit: contain;
+    padding-left: 30px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.sidebar-item-icon{
+    width: 20px;
+    height: 20px;
+}
+.sidebar-item-text{
+    width: 168px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 2.75;
+    padding-left: 20px;
+    padding-bottom:4px;
+}
+.sidebar-item-selected{
+    border-left:3px white solid !important;
+    background-color: #4a90e2 !important;
+    padding-left: 27px !important;
+}
+
+

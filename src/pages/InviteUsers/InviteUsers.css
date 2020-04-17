@@ -1,0 +1,61 @@
+.invite-users{
+    display: flex;
+    flex-direction:column;
+    height:100vh;
+}
+.invite-users-title,.invite-users-panel-title{
+    height: 49px;
+    margin-top:25px;
+    padding-left: 32px;
+    border-bottom: 1px #e6eaee solid;
+    display: flex;
+}
+.invite-users-icon{
+    width: 20px;
+    height: 20px;
+}
+.invite-users-title-text{
+    width: 1076px;
+    height: 28px;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.17;
+    color:#797676;
+    flex-grow: 1;
+    margin-top:-4px;
+    margin-left:5px;
+}
+.invite-users-invite-btn{
+    width: 120px;
+    height: 36px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #397cca;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    color: white;
+    margin-right:31.5px;
+}
+.invite-users-content{
+    background-color: #fbfbfb;
+    width:100%;
+}
+.invite-users-panel{
+    background-color: white;
+    margin:30px;
+    border:1px #f0f0f0 solid;
+    border-radius: 5px;
+}
+.invite-users-panel-title-text{
+    height: 28px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #3e3f42;
+    flex-grow: 1;
+}
+
+
+
+
