@@ -3,7 +3,6 @@ import './Login.css'
 import signInIcon from '../../res/images/illustration-sign-in.svg'
 import {Formik} from "formik";
 import {Form} from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import requestSuccessIcon from '../../res/images/ic-landing-success.svg'
 import {TEXT_ID} from "../../res/languages/lang";
@@ -53,7 +52,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                             validationSchema={schema}
                             onSubmit={console.log}
                             initialValues={{
-                                email:'you-email@juvo.com'
+                                email:''
                             }}
                         >
                             {({
@@ -71,7 +70,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                         <Form.Control
                                             className='login-form-input-content'
                                             type="text"
-                                            placeholder="209847502"
+                                            placeholder="your-email@your-domain.com"
                                             name="email"
                                             value={values.email}
                                             onChange={handleChange}
@@ -82,7 +81,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                             {errors.email}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <button className={isValid?'login-submit-btn':'login-submit-btn-disabled'}  type='submit' onClick={()=>requestToken(values.email)}>
+                                    <button className={isValid?'login-submit-btn':'login-submit-btn-disabled'} disabled={!isValid} type='submit' onClick={()=>requestToken(values.email)}>
                                         <b><FormattedMessage id={TEXT_ID.REQUEST_LINK}/></b>
                                     </button>
                                 </Form>

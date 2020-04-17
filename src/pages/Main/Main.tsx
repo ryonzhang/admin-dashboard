@@ -7,6 +7,11 @@ import customerSupportIcon from '../../res/images/sidebar/icon-white-customer-su
 import {UserManagement} from "../UserManagement/UserManagement";
 import {CustomerSupport} from "../CustomerSupport/CustomerSupport";
 import {TEXT_ID} from "../../res/languages/lang";
+import {Login} from "../Login/Login";
+import Cookies from 'js-cookie';
+import authUtils from '../../utils/auth'
+import convertUtils from '../../utils/converter'
+import routeUtils from '../../utils/route'
 
 enum SIDEBAR_TABS {
   USER_MANAGEMENT,
@@ -14,13 +19,24 @@ enum SIDEBAR_TABS {
 }
 
 export const Main: FunctionComponent = () => {
-  const [activeTab,setActiveTab] = useState(SIDEBAR_TABS.USER_MANAGEMENT);
-  const onClick = (event:any)=>{
-    console.log(event)
-  };
+    const [activeTab,setActiveTab] = useState(SIDEBAR_TABS.USER_MANAGEMENT);
+    const logout = (event:any)=>{
+        Cookies.remove('authToken');
+        routeUtils.reLogin();
+    };
 
-  return  <div className='main-root'>
-      <Sidebar logOut={onClick}>
+
+    // TODO: directly copy from the previous repo, the linting error should be fixed not repressed later and the util should be refactor, no setter should reside in getter function
+    // eslint-disable-next-line no-restricted-globals
+    const hashToken = authUtils.getTokenFromHash(location);
+    const cookieToken = Cookies.get('authToken');
+    const isAuthenticated = hashToken || cookieToken;
+    let tokenData;
+    if(isAuthenticated) tokenData =convertUtils.decodeToken(hashToken || cookieToken as string);
+    routeUtils.refreshPage();
+
+    return isAuthenticated?<div className='main-root'>
+      <Sidebar logOut={logout}>
         <SidebarItem textID={TEXT_ID.USER_MANAGEMENT} icon={userManagementIcon} selected={activeTab===SIDEBAR_TABS.USER_MANAGEMENT} onClick={()=>{setActiveTab(SIDEBAR_TABS.USER_MANAGEMENT)}}/>
         <SidebarItem textID={TEXT_ID.CUSTOMER_SUPPORT} icon={customerSupportIcon} selected={activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT} onClick={()=>{setActiveTab(SIDEBAR_TABS.CUSTOMER_SUPPORT)}}/>
       </Sidebar>
@@ -28,7 +44,7 @@ export const Main: FunctionComponent = () => {
         {activeTab===SIDEBAR_TABS.USER_MANAGEMENT && <UserManagement/>}
         {activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT && <CustomerSupport/>}
       </div>
-    </div>
+    </div>:<Login/>
 }
 
 

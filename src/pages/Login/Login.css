@@ -28,7 +28,6 @@
     padding-top:103px;
 }
 .login-form-input{
-    width: 212px;
     height: 18px;
     font-size: 12px;
     font-weight: 500;
@@ -45,13 +44,19 @@
     line-height: 1.38;
     color:#4a90e2;
     padding-left: 10px;
-    padding-top:60px;
+    margin-bottom: 15px;
 }
 .login-form-input-content{
     width: 344px !important;
     height: 56px !important;
-    margin-top:20px;
+    border-radius: 4px;
+    border: solid 2px #bcbaba;
+    font-size: 20px;
+    color: #9ea0a5;
+    padding-left:12px;
     margin-left:8px;
+    margin-top:15px;
+    box-sizing: border-box;
 }
 .login-form-input-feedback{
     width: 344px;
@@ -78,13 +83,13 @@
     text-align: center;
     color: white;
     margin-left: 38px;
-    margin-top:220px;
+    margin-top:130px;
 }
 .login-submit-btn-disabled{
     width: 335px;
     height: 50px;
     border-radius: 5px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.24);
     background-color: #8fbaec;
     font-size: 14px;
     font-weight: bold;
@@ -92,7 +97,7 @@
     text-align: center;
     color: white;
     margin-left: 38px;
-    margin-top:220px;
+    margin-top:130px;
 }
 .login-request-email{
     display: flex;
@@ -110,12 +115,13 @@
 }
 .login-request-email-subtitle{
     height: 22px;
-    width: 95%;
+    width: 360px;
     font-size: 15px;
     line-height: 1.47;
     color: #8798ad;
     padding-left: 43px;
-    padding-top:35px;
+    padding-top:5px;
+    padding-bottom: 66px;
 }
 .login-language{
     height:40px;

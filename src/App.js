@@ -11,7 +11,7 @@ export default function App(props) {
   return (
       <CustomContext.Provider value={value}>
         <IntlProvider messages={textPool[locale]}>
-          <Login/>
+          <Main/>
         </IntlProvider>
       </CustomContext.Provider>
   );

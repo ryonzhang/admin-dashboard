@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 /**
  * TODO:This is a direct copy from the old repository for the compatibility of quasi-backend service , should be refactored once the backend is restructured
- */
+*/
 
 interface APIDataProps {
   targetBackend: 'auth0' | 'juvoIq' | 'juvoAdminApis';
