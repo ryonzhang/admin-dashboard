@@ -1,4 +1,4 @@
-import React, {useState,FunctionComponent} from 'react';
+import React, {useState, FunctionComponent, useContext} from 'react';
 import './Main.css'
 import {Sidebar} from "../../components/Sidebar/Sidebar";
 import {SidebarItem} from "../../components/Sidebar/SidebarItem/SidebarItem";
@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import authUtils from '../../utils/auth'
 import convertUtils from '../../utils/converter'
 import routeUtils from '../../utils/route'
+import {CustomContext} from "../../contexts/custom-context";
 
 enum SIDEBAR_TABS {
   USER_MANAGEMENT,
@@ -20,11 +21,11 @@ enum SIDEBAR_TABS {
 
 export const Main: FunctionComponent = () => {
     const [activeTab,setActiveTab] = useState(SIDEBAR_TABS.USER_MANAGEMENT);
+    const customContext = useContext(CustomContext);
     const logout = (event:any)=>{
         Cookies.remove('authToken');
         routeUtils.reLogin();
     };
-
 
     // TODO: directly copy from the previous repo, the linting error should be fixed not repressed later and the util should be refactor, no setter should reside in getter function
     const hashToken = authUtils.getTokenFromHash();
@@ -32,7 +33,8 @@ export const Main: FunctionComponent = () => {
     const isAuthenticated = hashToken || cookieToken;
     let tokenData;
     if(isAuthenticated) tokenData =convertUtils.decodeToken(hashToken || cookieToken as string);
-    console.log(tokenData)
+    console.log(tokenData);
+    if(!customContext.user)customContext.setUser(tokenData);
     routeUtils.refreshPage();
 
     return isAuthenticated?<div className='main-root'>
@@ -41,8 +43,8 @@ export const Main: FunctionComponent = () => {
         <SidebarItem textID={TEXT_ID.CUSTOMER_SUPPORT} icon={customerSupportIcon} selected={activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT} onClick={()=>{setActiveTab(SIDEBAR_TABS.CUSTOMER_SUPPORT)}}/>
       </Sidebar>
       <div className='main-page'>
-        {activeTab===SIDEBAR_TABS.USER_MANAGEMENT && <UserManagement/>}
-        {activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT && <CustomerSupport/>}
+        { <UserManagement className={(activeTab===SIDEBAR_TABS.USER_MANAGEMENT || 'main-hidden') as string}/>}
+        { <CustomerSupport className={(activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT || 'main-hidden') as string}/>}
       </div>
     </div>:<Login/>
 }

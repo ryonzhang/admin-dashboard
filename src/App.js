@@ -7,7 +7,8 @@ import {Login} from "./pages/Login/Login";
 
 export default function App(props) {
   const [locale,setLocale]=useState('es_CL');
-  const value ={locale,setLocale}
+  const [user,setUser]=useState({});
+  const value ={locale,setLocale,user,setUser}
   return (
       <CustomContext.Provider value={value}>
         <IntlProvider messages={textPool[locale]}>

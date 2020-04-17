@@ -10,7 +10,14 @@ import noResultIcon from '../../res/images/illustration-no-results.svg'
 import {Formik} from "formik";
 import {FormattedMessage } from "react-intl";
 import {TEXT_ID} from '../../res/languages/lang'
-type UserManagementProps = {
+type CustomerSupportProps = {
+    className?:string
+}
+type CustomerInformationProps = {
+    className?:string
+}
+type NoResultProps = {
+    className?:string
 }
 let yup = require('yup');
 
@@ -18,7 +25,7 @@ const schema = yup.object({
     msisdn: yup.number().required(),
 });
 
-const CustomerInformation : FunctionComponent<UserManagementProps> = () =>
+const CustomerInformation : FunctionComponent<CustomerInformationProps> = () =>
     <div>
         <div className='customer-support-panel'>
             <div className='customer-support-panel-title'>
@@ -67,18 +74,18 @@ const CustomerInformation : FunctionComponent<UserManagementProps> = () =>
                     <TabItem textID={TEXT_ID.BALANCES} selected={false}/>
                     <TabItem textID={TEXT_ID.HISTORY} selected={true}/>
                 </Tab>
-                <Table indexed={true} headers={['FULL NAME','EMAIL','ROLE','LAST LOGIN','TIME']} rows={[['Admin ClaroChile','admin.clarochile.staging@juvo.com','Admin','04/16/2020','06:21']]} actionText={'EDIT'}/>
+                <Table indexed={true} headerTextIDs={['FULL NAME','EMAIL','ROLE','LAST LOGIN','TIME']} rows={[['Admin ClaroChile','admin.clarochile.staging@juvo.com','Admin','04/16/2020','06:21']]} actionTextID={'EDIT'}/>
             </div>
         </div>
     </div>
 
-const NoResult: FunctionComponent<UserManagementProps> = () =>
+const NoResult: FunctionComponent<NoResultProps> = () =>
     <div className='customer-support-no-result'>
         <img src={noResultIcon}/>
         <text><FormattedMessage id={TEXT_ID.ZERO_RESULTS_FOUND}/></text>
     </div>
 
-export const CustomerSupport: FunctionComponent<UserManagementProps> = () =>
+export const CustomerSupport: FunctionComponent<CustomerSupportProps> = () =>
         <div className='customer-support'>
             <div className='customer-support-title'>
                 <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_SUPPORT}/></b></text>
