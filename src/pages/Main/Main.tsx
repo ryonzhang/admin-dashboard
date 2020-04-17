@@ -27,12 +27,12 @@ export const Main: FunctionComponent = () => {
 
 
     // TODO: directly copy from the previous repo, the linting error should be fixed not repressed later and the util should be refactor, no setter should reside in getter function
-    // eslint-disable-next-line no-restricted-globals
-    const hashToken = authUtils.getTokenFromHash(location);
+    const hashToken = authUtils.getTokenFromHash();
     const cookieToken = Cookies.get('authToken');
     const isAuthenticated = hashToken || cookieToken;
     let tokenData;
     if(isAuthenticated) tokenData =convertUtils.decodeToken(hashToken || cookieToken as string);
+    console.log(tokenData)
     routeUtils.refreshPage();
 
     return isAuthenticated?<div className='main-root'>

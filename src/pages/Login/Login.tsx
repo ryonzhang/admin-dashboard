@@ -10,6 +10,7 @@ import {FormattedMessage} from "react-intl";
 import {CustomContext} from "../../contexts/custom-context";
 import {AxiosResponse} from "axios";
 import networkUtils from '../../utils/network';
+import {CircularProgress} from "@material-ui/core";
 
 type LoginProps = {
 }
@@ -23,7 +24,9 @@ const schema = yup.object({
 
 export const Login: FunctionComponent<LoginProps> = () =>{
     const [isModalOpen,setModalOpen]=useState(false);
+    const [loading,setLoading]=useState(false);
     const requestToken= async(email:string)=>{
+        setLoading(true);
         return networkUtils.makeAPICall({
             targetBackend: 'juvoAdminApis',
             url: '/user-mgmt/getTokenizedUrl',
@@ -33,9 +36,11 @@ export const Login: FunctionComponent<LoginProps> = () =>{
             .then((response:AxiosResponse) => {
                 console.log(response);
                 setModalOpen(true);
+                setLoading(false);
                 return { status: response.status };
             })
             .catch((e:any) => {
+                setLoading(false);
                 console.log(e);
             });
     };
@@ -81,9 +86,11 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                             {errors.email}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <button className={isValid?'login-submit-btn':'login-submit-btn-disabled'} disabled={!isValid} type='submit' onClick={()=>requestToken(values.email)}>
+                                    <button className={(isValid && !loading)?'login-submit-btn':'login-submit-btn-disabled'} disabled={!isValid} type='submit' onClick={()=>requestToken(values.email)}>
                                         <b><FormattedMessage id={TEXT_ID.REQUEST_LINK}/></b>
+
                                     </button>
+                                    {loading && <CircularProgress className='login-submit-loading' size={24}  />}
                                 </Form>
                             )}
                         </Formik>
