@@ -29,7 +29,7 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = () =>
     <div>
         <div className='customer-support-panel'>
             <div className='customer-support-panel-title'>
-                <text className='customer-support-panel-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_ID}/></b></text>
+                <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_ID}/></b></text>
             </div>
             <div className='customer-support-panel-container'>
                 <text className='customer-support-panel-text'>+1 1233247680</text>

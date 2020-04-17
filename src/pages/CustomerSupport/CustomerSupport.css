@@ -55,6 +55,16 @@
     line-height: 1.4;
     color: #3e3f42;
 }
+.customer-support-title-text{
+    width: 800px;
+    height: 28px;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.17;
+    color:#282e34;
+    flex-grow: 1;
+}
+
 .customer-support-form-input{
     width: 212px;
     height: 18px;
