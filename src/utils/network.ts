@@ -2,8 +2,21 @@ import axios, { Method } from 'axios';
 import qs from 'qs';
 import Cookies from 'js-cookie';
 
+// This piece is critical for the catch errors to work
+axios.interceptors.response.use(
+    response => {
+      return response
+    },
+    error => {
+      if (!error.response) {
+        console.log("Please check your internet connection.");
+      }
+      return Promise.reject(error)
+    }
+);
+
 /**
- * TODO:This is a direct copy from the old repository for the compatibility of quasi-backend service , should be refactored once the backend is restructured
+ * TODO:The following is a direct copy from the old repository for the compatibility of quasi-backend service , should be refactored once the backend is restructured
 */
 
 interface APIDataProps {
@@ -40,6 +53,9 @@ const getHostName = (carrier?: string) => {
   }
   return hostname;
 };
+
+
+
 
 const makeAPICall = (apiData: APIDataProps, carrier?: string) => {
   const { targetBackend, url: path, method, data, params } = apiData;

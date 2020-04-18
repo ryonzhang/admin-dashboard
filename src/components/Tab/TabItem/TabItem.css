@@ -15,6 +15,7 @@
     line-height: 1.2;
     letter-spacing: normal;
     text-align: center;
+    text-transform: capitalize;
 }
 .tab-item-selected{
     border-bottom: 3px #4a90e2 solid;
