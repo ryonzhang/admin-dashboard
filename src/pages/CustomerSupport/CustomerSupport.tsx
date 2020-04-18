@@ -18,7 +18,8 @@ type CustomerSupportProps = {
     className?:string
 }
 type CustomerInformationProps = {
-    className?:string
+    className?:string,
+    customerInfo:customerInfo,
 }
 type NoResultProps = {
     className?:string
@@ -33,15 +34,39 @@ const schema = yup.object({
     msisdn: yup.number().required(),
 });
 
+type history = {
+    type: string,
+    title: string,
+    point_change: number,
+    user_level: string,
+    user_points: number,
+    user_level_index: number,
+    remaining_amount_due: number,
+    loan_due_date: string,
+    transaction_id: string,
+    amount: string,
+    datetime: string,
+}
+type customerInfo={
+    msisdn?: string,
+    level?: string,
+    points?: number,
+    airtimeBalance?:number,
+    loanBalance?:number,
+    balances?:object[],
+    histories?:any[],
+    repaidStatus?:string,
+}
 
-const CustomerInformation : FunctionComponent<CustomerInformationProps> = () =>
+
+const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({customerInfo}) =>
     <div>
         <div className='customer-support-panel'>
             <div className='customer-support-panel-title'>
                 <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_ID}/></b></text>
             </div>
             <div className='customer-support-panel-container'>
-                <text className='customer-support-panel-text'>+1 1233247680</text>
+                <text className='customer-support-panel-text'>{customerInfo.msisdn}</text>
                 <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.MSISDN}/></text>
             </div>
         </div>
@@ -52,11 +77,11 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = () =>
                 </div>
                 <div className='customer-support-panel-container-balance'>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance customer-support-panel-right-bar'>
-                        <text className='customer-support-panel-text'>BRONZE</text>
+                        <text className='customer-support-panel-text'>{customerInfo.level}</text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.LEVEL}/></text>
                     </div>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance'>
-                        <text className='customer-support-panel-text'>42 PTS</text>
+                        <text className='customer-support-panel-text'>{customerInfo.points} PTS</text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.POINTS}/></text>
                     </div>
                 </div>
@@ -67,11 +92,11 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = () =>
                 </div>
                 <div className='customer-support-panel-container-balance'>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance customer-support-panel-right-bar'>
-                        <text className='customer-support-panel-text'>2323</text>
+                        <text className='customer-support-panel-text'>{customerInfo.airtimeBalance}</text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.AIRTIME_BALANCE}/></text>
                     </div>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance'>
-                        <text className='customer-support-panel-text'>42 PTS</text>
+                        <text className='customer-support-panel-text'>{customerInfo.loanBalance}</text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.LOAN_BALANCE}/></text>
                     </div>
                 </div>
@@ -99,18 +124,7 @@ const ToSearch: FunctionComponent<ToSearchProps> = () =>
         <img src={searchIcon}/>
         <text><FormattedMessage id={TEXT_ID.ENTER_CUSTOMER_MSISDN_OR_UUID_TO_START}/></text>
     </div>
-type history = {
 
-}
-type customerInfo={
-    msisdn: string,
-    level: string,
-    points: number,
-    airtimeBalance:number,
-    loanBalance:number,
-    balances:object[],
-    history:any,
-}
 
 enum CUSTOMER_SUPPORT_STATUS {
     INIT,
@@ -120,8 +134,12 @@ enum CUSTOMER_SUPPORT_STATUS {
 
 export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({className}) => {
     const customContext = useContext(CustomContext);
-    const [customerInfo,setCustomerInfo]= useState(null);
+    const [customerInfo,setCustomerInfo]= useState({});
     const [customerSupportStatus,setCustomerSupportStatus] = useState(CUSTOMER_SUPPORT_STATUS.INIT);
+    const assignCustomInfoProps = (props:customerInfo)=>{
+        setCustomerInfo(Object.assign(customerInfo,props))
+        console.log(props);
+    };
     const onSearch=async (msisdn:string)=>{
         const tasks = [
             await networkUtils.makeAPICall(
@@ -150,19 +168,15 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                 customContext.user.carrier,
             ),
         ];
-        // const [customerDataResponse, historyResponse, repaymentStatusResponse] = await
-        await Promise.all(tasks)
-            .then(items=>{console.log(items);setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);});
+        Promise.all(tasks)
+            .then(([customerDataResponse, historyResponse, repaymentStatusResponse]:any[])=>{
 
-        // if(customerDataResponse.status===200){
-        //     setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);
-        // }else{
-        //
-        // }
-        // const customerDataResponseFormatted = camelcaseKeys(customerDataResponse.data,{deep: true});
-        // const historyResponseFormatted = camelcaseKeys(historyResponse.data,{deep: true});
-        // const repaymentStatusResponseReformatted = camelcaseKeys(repaymentStatusResponse.data,{deep: true})
-        // console.log(customerDataResponse.status);
+                const {balances,account} = camelcaseKeys(customerDataResponse.data,{deep: true});
+                const histories = camelcaseKeys(historyResponse.data,{deep: true});
+                const {status} = camelcaseKeys(repaymentStatusResponse.data,{deep: true});
+                assignCustomInfoProps({msisdn,airtimeBalance:balances[0].amount,loanBalance:balances[1].amount,level:account.level,points:account.points,histories,repaidStatus:status});
+                setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);
+            });
     };
     return <div className={`customer-support ${className}`}>
         <div className='customer-support-title'>
@@ -224,7 +238,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
             </div>
             {customerSupportStatus===CUSTOMER_SUPPORT_STATUS.INIT && <ToSearch/>}
             {customerSupportStatus===CUSTOMER_SUPPORT_STATUS.NO_RESULT && <NoResult/>}
-            {customerSupportStatus===CUSTOMER_SUPPORT_STATUS.SUCCESS && <CustomerInformation/>}
+            {customerSupportStatus===CUSTOMER_SUPPORT_STATUS.SUCCESS && <CustomerInformation customerInfo={customerInfo}/>}
         </div>
     </div>
 }
