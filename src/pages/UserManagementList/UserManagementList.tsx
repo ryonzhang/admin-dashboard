@@ -9,6 +9,7 @@ import {FormattedMessage } from "react-intl";
 import {TEXT_ID} from '../../res/languages/lang';
 import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
+import {CircularProgress} from "@material-ui/core";
 type UserManagementProps = {
     onSetActivePage: Function,
     onSetUserToEdit: Function,
@@ -27,6 +28,7 @@ const getRowData=(user:any,keys:string[])=>{
 
 export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit}) =>{
     const customContext = useContext(CustomContext);
+    const [loading,setLoading]=useState(true);
     const [activeUsers,setActiveUsers]=useState([]);
     const [pendingUsers,setPendingUsers]=useState([]);
     const [activeTab,setActiveTab]=useState(USER_MANAGEMENT_TABS.ACTIVE_USERS);
@@ -39,6 +41,7 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
     };
     console.log(customContext);
     useEffect(() => {
+        setLoading(true);
         networkUtils
             .makeAPICall(
                 {
@@ -54,11 +57,12 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
                     getRowData(userData[0],['name']);
                     setActiveUsers(userData.filter((user:any) => user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
                     setPendingUsers(userData.filter((user: any) => !user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
-                    console.log(activeUsers);
+                    setLoading(false);
                 }
             })
             .catch((error) => {
                 console.error('getUsers error: ', error);
+               setLoading(false);
             })},[]
     );
     return <div className='user-management'>
@@ -76,6 +80,7 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
                 </Tab>
                 {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} idIndex={1} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers.map(u=>getRowData(u,['name','email','primaryRole','last_login','created_at']))} actionTextID={TEXT_ID.EDIT} action={action}/>:
                 <Table indexed={true} idIndex={1} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.TIME]} rows={pendingUsers.map(u=>getRowData(u,['name','email','primaryRole','created_at']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
+                {loading && <CircularProgress className='user-management-loading' size={50}  />}
             </div>
         </div>
     </div>

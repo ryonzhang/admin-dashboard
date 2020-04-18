@@ -41,7 +41,10 @@
     border:1px #f0f0f0 solid;
     border-radius: 5px;
 }
-
+.user-management-loading{
+    margin-top:10%;
+    margin-left:48%;
+}
 
 
 
