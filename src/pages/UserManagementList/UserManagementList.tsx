@@ -11,6 +11,7 @@ import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
 type UserManagementProps = {
     onSetActivePage: Function,
+    onSetUserToEdit: Function,
 }
 
 const connectionType = 'email';
@@ -20,11 +21,22 @@ enum USER_MANAGEMENT_TABS {
     PENDING_USERS,
 }
 
-export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage}) =>{
+const getRowData=(user:any,keys:string[])=>{
+    return Object.values(keys.reduce(function(o:any, k) { o[k] = user[k]; return o; }, {}));
+};
+
+export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit}) =>{
     const customContext = useContext(CustomContext);
     const [activeUsers,setActiveUsers]=useState([]);
-    const [activeTab,setActiveTab]=useState(USER_MANAGEMENT_TABS.ACTIVE_USERS);
     const [pendingUsers,setPendingUsers]=useState([]);
+    const [activeTab,setActiveTab]=useState(USER_MANAGEMENT_TABS.ACTIVE_USERS);
+
+    const action=(index:string)=>{
+        onSetActivePage(USER_MANAGEMENT_PAGES.EDIT_USER);
+        const userToEdit=[...activeUsers,...pendingUsers].find((user:any)=> user.email === index);
+        console.log(userToEdit);
+        onSetUserToEdit(userToEdit);
+    };
     console.log(customContext);
     useEffect(() => {
         networkUtils
@@ -39,8 +51,9 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
             .then((response) => {
                 if (response.status === 200) {
                     const userData = response.data;//camelizeKeys(response.data);
-                    setActiveUsers(userData.filter((user:any) => user.email_verified).map((user:any)=>[user.name,user.email,user.user_metadata.primaryRole,user.last_login,user.created_at]));
-                    setPendingUsers(userData.filter((user: any) => !user.email_verified).map((user:any)=>[user.name,user.email,user.user_metadata.primaryRole,user.created_at]));
+                    getRowData(userData[0],['name']);
+                    setActiveUsers(userData.filter((user:any) => user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
+                    setPendingUsers(userData.filter((user: any) => !user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
                     console.log(activeUsers);
                 }
             })
@@ -61,8 +74,8 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
                     <TabItem textID={TEXT_ID.ACTIVE_USERS} selected={activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.ACTIVE_USERS)} />
                     <TabItem textID={TEXT_ID.PENDING_USERS} selected={activeTab===USER_MANAGEMENT_TABS.PENDING_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.PENDING_USERS)}/>
                 </Tab>
-                {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers} actionTextID={TEXT_ID.EDIT}/>:
-                <Table indexed={true} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.TIME]} rows={pendingUsers} actionTextID={TEXT_ID.EDIT}/>}
+                {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} idIndex={1} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers.map(u=>getRowData(u,['name','email','primaryRole','last_login','created_at']))} actionTextID={TEXT_ID.EDIT} action={action}/>:
+                <Table indexed={true} idIndex={1} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.TIME]} rows={pendingUsers.map(u=>getRowData(u,['name','email','primaryRole','created_at']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
             </div>
         </div>
     </div>

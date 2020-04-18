@@ -74,7 +74,7 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = () =>
                     <TabItem textID={TEXT_ID.BALANCES} selected={false}/>
                     <TabItem textID={TEXT_ID.HISTORY} selected={true}/>
                 </Tab>
-                <Table indexed={true} headerTextIDs={['FULL NAME','EMAIL','ROLE','LAST LOGIN','TIME']} rows={[['Admin ClaroChile','admin.clarochile.staging@juvo.com','Admin','04/16/2020','06:21']]} actionTextID={'EDIT'}/>
+                <Table indexed={true} idIndex={0} headerTextIDs={['FULL NAME','EMAIL','ROLE','LAST LOGIN','TIME']} rows={[['Admin ClaroChile','admin.clarochile.staging@juvo.com','Admin','04/16/2020','06:21']]} actionTextID={'EDIT'}/>
             </div>
         </div>
     </div>
@@ -85,8 +85,8 @@ const NoResult: FunctionComponent<NoResultProps> = () =>
         <text><FormattedMessage id={TEXT_ID.ZERO_RESULTS_FOUND}/></text>
     </div>
 
-export const CustomerSupport: FunctionComponent<CustomerSupportProps> = () =>
-        <div className='customer-support'>
+export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({className}) =>
+        <div className={`customer-support ${className}`}>
             <div className='customer-support-title'>
                 <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_SUPPORT}/></b></text>
             </div>
