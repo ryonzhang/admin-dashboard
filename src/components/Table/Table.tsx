@@ -2,7 +2,6 @@ import React,{FunctionComponent} from 'react';
 import './Table.css'
 import Button from "@material-ui/core/Button";
 import {FormattedMessage} from "react-intl";
-import {act} from "react-dom/test-utils";
 
 type TableProps = {
     indexed:boolean,

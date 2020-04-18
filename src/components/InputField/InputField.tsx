@@ -12,6 +12,7 @@ type InputFieldProps = {
     type:string|undefined,
     placeholderTextID:string,
     handleChange:(event:FormEvent)=>void,
+    setFieldValues:Function,
     options?:Array<option>,
     className?:string
 }
@@ -23,6 +24,7 @@ type DropdownInputFieldProps = {
     value?:string|number,
     labelTextID:string,
     handleChange: (event:FormEvent)=>void,
+    setFieldValues:Function,
     options:Array<option>,
     className?:string,
     placeholderTextID:string,
@@ -35,13 +37,14 @@ type BaseInputFieldProps = {
     type:string|undefined,
     placeholderTextID:string,
     handleChange:(event:FormEvent)=>void,
+    setFieldValues:Function,
     className?:string
 }
 
-const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,labelTextID,options,handleChange,className,placeholderTextID}) =>
+const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,labelTextID,options,handleChange,className,placeholderTextID,setFieldValues}) =>
     <Form.Group className={`input-field-dropdown ${className}`}>
         <Form.Label className='input-field-label'><FormattedMessage id={labelTextID}/></Form.Label>
-        <Dropdown onSelect={ (eventKey:string,e:React.SyntheticEvent<unknown>) => {}}>
+        <Dropdown onSelect={ (eventKey:string,e:React.SyntheticEvent<unknown>) => {setFieldValues('department',eventKey)}}>
             <Dropdown.Toggle id={'dropdown'} className='input-field-content'>
                 {value || <FormattedMessage id={placeholderTextID}/>}
                 <img className='input-field-dropdown-icon' src={dropdownIcon}/>
@@ -57,7 +60,7 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
         </Dropdown>
     </Form.Group>
 
-const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID,name,type,value,placeholderTextID,error,handleChange,className}) =>{
+const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID,name,type,value,placeholderTextID,error,handleChange,className,setFieldValues}) =>{
     const context = useContext(IntlContext);
     const placeholder=context.formatMessage({id:placeholderTextID});
     return     <Form.Group className={`input-field-base ${className}`}>
@@ -68,7 +71,7 @@ const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID
             placeholder={placeholder}
             name={name}
             value={value}
-            onChange={handleChange}
+            onChange={(e:any)=>{handleChange(e);console.log(handleChange)}}
             isInvalid={!!error}
         />
         <Form.Control.Feedback className='input-field-feedback' type="invalid">
@@ -78,9 +81,9 @@ const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID
 }
 
 
-export const InputField: FunctionComponent<InputFieldProps> = ({isDropdown,className,labelTextID,name,type,value,placeholderTextID,error,handleChange,options}) =>
-    isDropdown?<DropdownInputField className={className} placeholderTextID={placeholderTextID} labelTextID={labelTextID}  value={value} options={options||[]} handleChange={handleChange}/>:
-        <BaseInputFieldProps className={className} labelTextID={labelTextID} error={error} value={value} type={type} placeholderTextID={placeholderTextID} name={name} handleChange={handleChange}/>
+export const InputField: FunctionComponent<InputFieldProps> = ({isDropdown,className,labelTextID,name,type,value,placeholderTextID,error,handleChange,options,setFieldValues}) =>
+    isDropdown?<DropdownInputField className={className} placeholderTextID={placeholderTextID} labelTextID={labelTextID}  value={value} options={options||[]} handleChange={handleChange} setFieldValues={setFieldValues}/>:
+        <BaseInputFieldProps className={className} labelTextID={labelTextID} error={error} value={value} type={type} placeholderTextID={placeholderTextID} name={name} handleChange={handleChange} setFieldValues={setFieldValues}/>
 
 
 

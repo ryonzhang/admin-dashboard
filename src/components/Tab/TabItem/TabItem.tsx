@@ -1,7 +1,6 @@
 import React, {Component, FunctionComponent} from 'react';
 import './TabItem.css'
 import {FormattedMessage } from "react-intl";
-import {TEXT_ID} from "../../../res/languages/lang";
 
 type SidebarItemProps = {
     textID:string,

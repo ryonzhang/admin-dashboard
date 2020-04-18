@@ -1,4 +1,4 @@
-import React,{FunctionComponent,useContext} from 'react';
+import React,{FunctionComponent} from 'react';
 import List from '@material-ui/core/List';
 import './Sidebar.css'
 import {CustomContext} from "../../contexts/custom-context";
@@ -15,7 +15,7 @@ type SidebarProps = {
 
 export const Sidebar: FunctionComponent<SidebarProps> = ({logOut,children}) =>{
     return <CustomContext.Consumer>
-        {({locale,setLocale})=>
+        {({setLocale})=>
         <div className='sidebar-backdrop'>
             <div className='sidebar-logo'>
                 <img src={logoIcon}/>

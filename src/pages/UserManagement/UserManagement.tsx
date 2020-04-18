@@ -3,8 +3,6 @@ import './UserManagement.css'
 import {UserManagementList} from "../UserManagementList/UserManagementList";
 import {InviteUsers} from "../InviteUsers/InviteUsers";
 import {EditUser} from "../EditUser/EditUser";
-import {IntlContext} from "react-intl";
-import {TEXT_ID} from "../../res/languages/lang";
 
 type UserManagementProps = {
     className:string
@@ -17,9 +15,6 @@ export enum USER_MANAGEMENT_PAGES {
 }
 
 export const UserManagement: FunctionComponent<UserManagementProps> = ({className}) =>{
-
-    const intl = useContext(IntlContext);
-    console.log('hahahahaha success' +intl.formatMessage({id:TEXT_ID.EDIT}));
     const [activePage,setActivePage] = useState(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);
     const [userToEdit,setUserToEdit] = useState({} as any);
     return <div className={className}>

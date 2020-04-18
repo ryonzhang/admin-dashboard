@@ -22,6 +22,14 @@ enum USER_MANAGEMENT_TABS {
     PENDING_USERS,
 }
 
+export type UserToEdit = {
+    userId:string,
+    firstName:string,
+    lastName:string,
+    email:string,
+    department:string,
+}
+
 export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit}) =>{
     const customContext = useContext(CustomContext);
     const [loading,setLoading]=useState(true);
@@ -31,9 +39,16 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
 
     const action=(index:string)=>{
         onSetActivePage(USER_MANAGEMENT_PAGES.EDIT_USER);
-        const userToEdit=[...activeUsers,...pendingUsers].find((user:any)=> user.user_id === index);
-        console.log(userToEdit);
-        onSetUserToEdit(userToEdit);
+        const userToEdit:any=[...activeUsers,...pendingUsers].find((user:any)=> user.user_id === index);
+        const formattedUserToEdit: UserToEdit= userToEdit && {
+            userId:userToEdit.user_id,
+            firstName:userToEdit.given_name,
+            lastName:userToEdit.family_name,
+            email:userToEdit.email,
+            department:userToEdit.department
+        };
+        console.log(formattedUserToEdit);
+        onSetUserToEdit(formattedUserToEdit);
     };
     console.log(customContext);
     useEffect(() => {
