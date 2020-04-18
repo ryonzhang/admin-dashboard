@@ -30,12 +30,35 @@
     line-height: 1.56;
     color:#282e34;
 }
+.customer-support-loading{
+    width: 120px;
+    height: 36px;
+    margin-right:31.5px;
+    position: relative;
+    left:366px;
+    top:53px;
+}
 .customer-support-submit-btn{
     width: 120px;
     height: 36px;
     border-radius: 5px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
     background-color: #397cca;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    color: white;
+    margin-right:31.5px;
+    position: relative;
+    left:466px;
+    top:47px;
+}
+.customer-support-submit-btn-loading{
+    width: 120px;
+    height: 36px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #8fbaec;
     font-size: 14px;
     font-weight: bold;
     line-height: 1.14;
@@ -176,4 +199,9 @@
     font-size: 18px;
     font-weight: bold;
     line-height: 2.33;
+}
+.customer-support-star-level-icon{
+    width: 31px;
+    height: 28px;
+    object-fit: contain;
 }

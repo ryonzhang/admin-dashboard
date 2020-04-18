@@ -10,21 +10,21 @@ type TableProps = {
     rows: Array<Array<any>>
     actionTextID?:string,
     action?:(event:any)=>void,
-    idIndex:number,
+    IDs:Array<any>,
 }
 
-export const Table: FunctionComponent<TableProps> = ({indexed,headerTextIDs,rows,actionTextID,action,idIndex}) =>
+export const Table: FunctionComponent<TableProps> = ({indexed,headerTextIDs,rows,actionTextID,action,IDs}) =>
     <table className='table'>
         <tr className='table-header'>
             {headerTextIDs.map(headerTextID=><th className='table-header-cell'><FormattedMessage id={headerTextID}/></th>)}
             {actionTextID && <th className='table-header-cell'/>}
         </tr>
-        {rows.map(row =>
+        {rows.map((row,rowIndex) =>
             <tr className='table-row'>
                 {row.map((rd, index) => <td
                     className={`table-row-cell ${index == 0 && indexed && 'table-row-cell-indexed'}`}>{rd}</td>)}
                 {actionTextID && <td className='table-row-cell table-row-action'>
-                    <Button  size="small" color="primary" className='table-row-action-text' onClick={()=>{action && action(row[idIndex])}}>
+                    <Button  size="small" color="primary" className='table-row-action-text' onClick={()=>{action && action(IDs[rowIndex])}}>
                         <FormattedMessage id={actionTextID}/>
                     </Button>
                 </td>}

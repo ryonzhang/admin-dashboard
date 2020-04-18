@@ -4,16 +4,23 @@ import './CustomerSupport.css'
 import {TabItem} from "../../components/Tab/TabItem/TabItem";
 import {Tab} from "../../components/Tab/Tab";
 import {Table} from "../../components/Table/Table";
-import backIcon from '../../res/images/ic-back.svg'
 import {Form} from "react-bootstrap";
 import noResultIcon from '../../res/images/illustration-no-results.svg'
 import searchIcon from '../../res/images/illustration-search.svg'
+import starLevelBeginner from '../../res/images/start-level/star-level-beginner.svg'
+import starLevelBronze from '../../res/images/start-level/star-level-bronze.svg'
+import starLevelDiamond from '../../res/images/start-level/star-level-diamond.svg'
+import starLevelGold from '../../res/images/start-level/star-level-gold.svg'
+import starLevelSilver from '../../res/images/start-level/star-level-silver.svg'
 import {Formik} from "formik";
 import {FormattedMessage } from "react-intl";
 import {TEXT_ID} from '../../res/languages/lang';
 import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
+import convertUtils from '../../utils/converter';
+import {CircularProgress} from "@material-ui/core";
 const camelcaseKeys = require('camelcase-keys');
+
 type CustomerSupportProps = {
     className?:string
 }
@@ -37,13 +44,13 @@ const schema = yup.object({
 type history = {
     type: string,
     title: string,
-    point_change: number,
-    user_level: string,
-    user_points: number,
-    user_level_index: number,
-    remaining_amount_due: number,
-    loan_due_date: string,
-    transaction_id: string,
+    pointChange: number,
+    userLevel: string,
+    userPoints: number,
+    userLevelIndex: number,
+    remainingAmountDue: number,
+    loanDueDate: string,
+    transactionId: string,
     amount: string,
     datetime: string,
 }
@@ -57,10 +64,21 @@ type customerInfo={
     histories?:any[],
     repaidStatus?:string,
 }
+enum CUSTOMER_SUPPORT_TABS {
+    BALANCES,
+    HISTORY,
+}
+const starLevelIconMap:any={
+    beginner: starLevelBeginner,
+    bronze: starLevelBronze,
+    diamond: starLevelDiamond,
+    gold: starLevelGold,
+    silver: starLevelSilver,
+}
 
-
-const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({customerInfo}) =>
-    <div>
+const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({customerInfo}) =>{
+    const [activeTab,setActiveTab]=useState(CUSTOMER_SUPPORT_TABS.BALANCES);
+    return <div>
         <div className='customer-support-panel'>
             <div className='customer-support-panel-title'>
                 <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_ID}/></b></text>
@@ -77,7 +95,7 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
                 </div>
                 <div className='customer-support-panel-container-balance'>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance customer-support-panel-right-bar'>
-                        <text className='customer-support-panel-text'>{customerInfo.level}</text>
+                        <text className='customer-support-panel-text'>{customerInfo.level} <img className='customer-support-star-level-icon' src={starLevelIconMap[(customerInfo.level as string).toLowerCase()]}/></text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.LEVEL}/></text>
                     </div>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance'>
@@ -92,11 +110,11 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
                 </div>
                 <div className='customer-support-panel-container-balance'>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance customer-support-panel-right-bar'>
-                        <text className='customer-support-panel-text'>{customerInfo.airtimeBalance}</text>
+                        <text className='customer-support-panel-text'>{'$ '+convertUtils.numberToFix(customerInfo.airtimeBalance)}</text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.AIRTIME_BALANCE}/></text>
                     </div>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance'>
-                        <text className='customer-support-panel-text'>{customerInfo.loanBalance}</text>
+                        <text className='customer-support-panel-text'>{'$ '+convertUtils.numberToFix(customerInfo.loanBalance)}</text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.LOAN_BALANCE}/></text>
                     </div>
                 </div>
@@ -105,13 +123,16 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
         <div className='customer-support-table-content'>
             <div className='customer-support-table-panel'>
                 <Tab>
-                    <TabItem textID={TEXT_ID.BALANCES} selected={false}/>
-                    <TabItem textID={TEXT_ID.HISTORY} selected={true}/>
+                    <TabItem textID={TEXT_ID.BALANCES} selected={activeTab===CUSTOMER_SUPPORT_TABS.BALANCES} onClick={()=>setActiveTab(CUSTOMER_SUPPORT_TABS.BALANCES)} />
+                    <TabItem textID={TEXT_ID.HISTORY} selected={activeTab===CUSTOMER_SUPPORT_TABS.HISTORY} onClick={()=>setActiveTab(CUSTOMER_SUPPORT_TABS.HISTORY)}/>
                 </Tab>
-                <Table indexed={true} idIndex={0} headerTextIDs={['FULL NAME','EMAIL','ROLE','LAST LOGIN','TIME']} rows={[['Admin ClaroChile','admin.clarochile.staging@juvo.com','Admin','04/16/2020','06:21']]} actionTextID={'EDIT'}/>
+                {activeTab===CUSTOMER_SUPPORT_TABS.HISTORY?<Table IDs={(customerInfo.histories as any[]).map(u=>u.transactionId)} indexed={false}  headerTextIDs={[TEXT_ID.ACTIVITY,TEXT_ID.DATE,TEXT_ID.POINTS,TEXT_ID.ID]} rows={(customerInfo.histories as []).map(h=>convertUtils.getRowData(h,['title','datetime','pointChange','transactionId']))}/>:
+                    <Table indexed={false} IDs={(customerInfo.histories as any[]).map(u=>u.transactionId)} headerTextIDs={[TEXT_ID.CATEGORY,TEXT_ID.PRODUCT_NAME,TEXT_ID.EXPIRATION_DATE,TEXT_ID.EXPIRATION_TIME,TEXT_ID.BALANCES]} rows={[].map(u=>convertUtils.getRowData(u,['title','datetime','pointChange','transactionId']))}/>}
             </div>
         </div>
     </div>
+}
+
 
 const NoResult: FunctionComponent<NoResultProps> = () =>
     <div className='customer-support-no-result'>
@@ -136,11 +157,13 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
     const customContext = useContext(CustomContext);
     const [customerInfo,setCustomerInfo]= useState({});
     const [customerSupportStatus,setCustomerSupportStatus] = useState(CUSTOMER_SUPPORT_STATUS.INIT);
+    const [loading,setLoading]=useState(false);
     const assignCustomInfoProps = (props:customerInfo)=>{
         setCustomerInfo(Object.assign(customerInfo,props))
         console.log(props);
     };
     const onSearch=async (msisdn:string)=>{
+        setLoading(true);
         const tasks = [
             await networkUtils.makeAPICall(
                 {
@@ -148,7 +171,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                     url: `/customers/${msisdn}`,
                 },
                 customContext.user.carrier,
-            ).catch(err=>{console.log(err);setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.NO_RESULT);}),
+            ).catch(err=>{console.log(err);setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.NO_RESULT);setLoading(false);}),
             await networkUtils.makeAPICall(
                 {
                     targetBackend: 'juvoAdminApis',
@@ -170,12 +193,13 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
         ];
         Promise.all(tasks)
             .then(([customerDataResponse, historyResponse, repaymentStatusResponse]:any[])=>{
-
                 const {balances,account} = camelcaseKeys(customerDataResponse.data,{deep: true});
                 const histories = camelcaseKeys(historyResponse.data,{deep: true});
+                (histories as history[]).forEach(history=>history.datetime=convertUtils.dateTimeFormatter(history.datetime));
                 const {status} = camelcaseKeys(repaymentStatusResponse.data,{deep: true});
                 assignCustomInfoProps({msisdn,airtimeBalance:balances[0].amount,loanBalance:balances[1].amount,level:account.level,points:account.points,histories,repaidStatus:status});
                 setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);
+                setLoading(false);
             });
     };
     return <div className={`customer-support ${className}`}>
@@ -227,9 +251,10 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                                             {errors.msisdn}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <button className='customer-support-submit-btn' type='submit'>
+                                    <button className={`${loading?'customer-support-submit-btn-loading':'customer-support-submit-btn'}`} type='submit'>
                                         <FormattedMessage id={TEXT_ID.SEARCH}/>
                                     </button>
+                                    {loading && <CircularProgress className='customer-support-loading' size={24}  />}
                                 </Form>
                             )}
                         </Formik>

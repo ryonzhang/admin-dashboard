@@ -1,6 +1,5 @@
 import React, {FunctionComponent,useEffect,useState,useContext} from "react";
 import './UserManagementList.css';
-import axios from 'axios';
 import {TabItem} from "../../components/Tab/TabItem/TabItem";
 import {Tab} from "../../components/Tab/Tab";
 import {Table} from "../../components/Table/Table";
@@ -10,6 +9,7 @@ import {TEXT_ID} from '../../res/languages/lang';
 import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
 import {CircularProgress} from "@material-ui/core";
+import convertUtils from '../../utils/converter';
 type UserManagementProps = {
     onSetActivePage: Function,
     onSetUserToEdit: Function,
@@ -22,10 +22,6 @@ enum USER_MANAGEMENT_TABS {
     PENDING_USERS,
 }
 
-const getRowData=(user:any,keys:string[])=>{
-    return Object.values(keys.reduce(function(o:any, k) { o[k] = user[k]; return o; }, {}));
-};
-
 export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit}) =>{
     const customContext = useContext(CustomContext);
     const [loading,setLoading]=useState(true);
@@ -35,7 +31,7 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
 
     const action=(index:string)=>{
         onSetActivePage(USER_MANAGEMENT_PAGES.EDIT_USER);
-        const userToEdit=[...activeUsers,...pendingUsers].find((user:any)=> user.email === index);
+        const userToEdit=[...activeUsers,...pendingUsers].find((user:any)=> user.user_id === index);
         console.log(userToEdit);
         onSetUserToEdit(userToEdit);
     };
@@ -53,8 +49,10 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
             )
             .then((response) => {
                 if (response.status === 200) {
-                    const userData = response.data;//camelizeKeys(response.data);
-                    getRowData(userData[0],['name']);
+                    //TODO:camelize keys
+                    const userData = response.data;
+                    (userData as any[]).forEach(user=>user.last_login_date=convertUtils.dateFormatter(user.last_login));
+                    (userData as any[]).forEach(user=>user.last_login_time=convertUtils.timeFormatter(user.last_login));
                     setActiveUsers(userData.filter((user:any) => user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
                     setPendingUsers(userData.filter((user: any) => !user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
                     setLoading(false);
@@ -78,8 +76,8 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
                     <TabItem textID={TEXT_ID.ACTIVE_USERS} selected={activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.ACTIVE_USERS)} />
                     <TabItem textID={TEXT_ID.PENDING_USERS} selected={activeTab===USER_MANAGEMENT_TABS.PENDING_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.PENDING_USERS)}/>
                 </Tab>
-                {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} idIndex={1} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers.map(u=>getRowData(u,['name','email','primaryRole','last_login','created_at']))} actionTextID={TEXT_ID.EDIT} action={action}/>:
-                <Table indexed={true} idIndex={1} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.TIME]} rows={pendingUsers.map(u=>getRowData(u,['name','email','primaryRole','created_at']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
+                {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} IDs={(activeUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole','last_login_date','last_login_time']))} actionTextID={TEXT_ID.EDIT} action={action}/>:
+                <Table indexed={true} IDs={(pendingUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE]} rows={pendingUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
                 {loading && <CircularProgress className='user-management-loading' size={50}  />}
             </div>
         </div>

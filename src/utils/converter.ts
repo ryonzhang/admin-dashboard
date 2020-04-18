@@ -29,6 +29,11 @@ const dateFormatter = (isoDate?: string): string => {
   return `${pad(date.getMonth() + 1)}/${pad(date.getDate())}/${date.getFullYear()}`;
 };
 
+const dateTimeFormatter = (isoDate?: string): string => {
+  if (!isoDate) return 'N/A';
+  return `${dateFormatter(isoDate)} ${timeFormatter(isoDate)}`;
+};
+
 const timeFormatter = (isoDate?: string): string => {
   if (!isoDate) return 'N/A';
 
@@ -45,4 +50,18 @@ const decodeToken = (token: string): TokenDataType => {
     department: jwtTokenDecoded['https://juvoup.com/department'],
   };
 };
-export default { dateFormatter, timeFormatter, decodeToken };
+
+const numberToFix=(value:number|string|undefined)=>{
+  if(typeof value ==="string"){
+    return parseFloat(value).toFixed(2);
+  }else if(typeof value ==="number"){
+    return value.toFixed(2);
+  }else{
+    return '0.00';
+  }
+};
+
+const getRowData=(user:any,keys:string[])=>{
+  return Object.values(keys.reduce(function(o:any, k) { o[k] = user[k]; return o; }, {}));
+};
+export default { dateFormatter, timeFormatter, decodeToken ,getRowData, dateTimeFormatter,numberToFix};
