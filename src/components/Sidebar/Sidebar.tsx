@@ -30,7 +30,7 @@ export const Sidebar: FunctionComponent<SidebarProps> = ({logOut,children}) =>{
             </div>
             <div className='sidebar-language'>
                 <text className='sidebar-language-option' onClick={()=>setLocale('en')}>English</text>
-                <text className='sidebar-language-option' onClick={()=>setLocale('es_CL')}>Español</text>
+                <text className='sidebar-language-option' onClick={()=>setLocale('es-CL')}>Español</text>
             </div>
         </div>}
     </CustomContext.Consumer>

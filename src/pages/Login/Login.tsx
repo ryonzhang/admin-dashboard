@@ -95,7 +95,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                         </Formik>
                         <div className='login-language'>
                             <text className='login-language-option' onClick={()=>setLocale('en')}>English</text>
-                            <text className='login-language-option' onClick={()=>setLocale('es_CL')}>Español</text>
+                            <text className='login-language-option' onClick={()=>setLocale('es-CL')}>Español</text>
                         </div>
                     </div>
                     <div className='login-email-image'>
