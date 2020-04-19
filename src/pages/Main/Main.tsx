@@ -21,7 +21,6 @@ enum SIDEBAR_TABS {
 
 export const Main: FunctionComponent = () => {
     const [activeTab,setActiveTab] = useState(SIDEBAR_TABS.USER_MANAGEMENT);
-    const customContext = useContext(CustomContext);
     const logout = (event:any)=>{
         Cookies.remove('authToken');
         routeUtils.reLogin();
@@ -33,8 +32,10 @@ export const Main: FunctionComponent = () => {
     const isAuthenticated = hashToken || cookieToken;
     let tokenData;
     if(isAuthenticated) tokenData =convertUtils.decodeToken(hashToken || cookieToken as string);
-    console.log(tokenData);
-    if(!customContext.user)customContext.setUser(tokenData);
+    // TODO: copy ended here
+
+    authUtils.setUser(tokenData);
+
     routeUtils.refreshPage();
 
     return isAuthenticated?<div className='main-root'>
@@ -43,8 +44,8 @@ export const Main: FunctionComponent = () => {
         <SidebarItem textID={TEXT_ID.CUSTOMER_SUPPORT} icon={customerSupportIcon} selected={activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT} onClick={()=>{setActiveTab(SIDEBAR_TABS.CUSTOMER_SUPPORT)}}/>
       </Sidebar>
       <div className='main-page'>
-        { <UserManagement className={(activeTab===SIDEBAR_TABS.USER_MANAGEMENT || 'main-hidden') as string}/>}
-        { <CustomerSupport className={(activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT || 'main-hidden') as string}/>}
+         <UserManagement className={(activeTab===SIDEBAR_TABS.USER_MANAGEMENT || 'main-hidden') as string}/>
+         <CustomerSupport className={(activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT || 'main-hidden') as string}/>
       </div>
     </div>:<Login/>
 }

@@ -18,7 +18,10 @@ import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
 import convertUtils from '../../utils/converter';
 import {CircularProgress} from "@material-ui/core";
+import authUtils from "../../utils/auth";
+
 const camelcaseKeys = require('camelcase-keys');
+
 
 type CustomerSupportProps = {
     className?:string
@@ -169,7 +172,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                     targetBackend: 'juvoAdminApis',
                     url: `/customers/${msisdn}`,
                 },
-                customContext.user.carrier,
+                authUtils.getCarrier(),
             ).catch(err=>{console.log(err);setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.NO_RESULT);setLoading(false);}),
             await networkUtils.makeAPICall(
                 {
@@ -180,14 +183,14 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                         limit: 10,
                     },
                 },
-                customContext.user.carrier,
+                authUtils.getCarrier(),
             ),
             await networkUtils.makeAPICall(
                 {
                     targetBackend: 'juvoAdminApis',
                     url: `/customers/${msisdn}/repayments`,
                 },
-                customContext.user.carrier,
+                authUtils.getCarrier(),
             ),
         ];
         Promise.all(tasks)

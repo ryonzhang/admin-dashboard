@@ -1,5 +1,17 @@
 import Cookies from "js-cookie";
 
+const setUser=(user:any)=>{
+    Cookies.set('user', user);
+};
+
+const getUser=()=>{
+    return JSON.parse(Cookies.get('user') as string)
+};
+
+const getCarrier=()=>{
+    return (getUser() as any)['carrier'];
+}
+
 /**
  * TODO:This is a direct copy from the old repository for the compatibility of quasi-backend service , should be refactored once the backend is restructured
  */
@@ -26,5 +38,8 @@ const getTokenFromHash = () => {
 };
 
 export default {
-    getTokenFromHash
+    getTokenFromHash,
+    setUser,
+    getUser,
+    getCarrier,
 };

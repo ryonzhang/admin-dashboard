@@ -2,6 +2,4 @@ import {createContext} from 'react';
 export const CustomContext = createContext({
     locale:'en',
     setLocale:(locale:string)=>{},
-    user:{ carrier: '', department: '', username: '', primaryRole: '' },
-    setUser:(user:any)=>{},
 });

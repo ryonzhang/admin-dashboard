@@ -13,7 +13,9 @@ import {UserToEdit} from "../UserManagementList/UserManagementList";
 import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
-import {InfoDialog} from "../../components/InfoDialog/InfoDialog";
+import {InfoDialog} from "../../components/InfoDialog/InfoDialog"
+import authUtils from "../../utils/auth";
+
 type EditUserProps = {
     onSetActivePage: Function,
     setRefreshTimestamp:Function,
@@ -45,7 +47,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                     targetBackend: 'juvoAdminApis',
                     url: `/user-mgmt/delete-user/${(userToEdit as any).userId}`,
                 },
-                customContext.user.carrier,
+                authUtils.getCarrier()
             )
             .catch((error:any) => {
                 console.log('deleteUser error', error);
@@ -71,7 +73,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                                         url: `/user-mgmt/update-user/${(values as any).userId}`,
                                         data: values,
                                     },
-                                    customContext.user.carrier,
+                                    authUtils.getCarrier(),
                                 )
                                 .catch((error) => {
                                     setLoading(false);

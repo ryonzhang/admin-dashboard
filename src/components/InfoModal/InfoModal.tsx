@@ -10,12 +10,10 @@ type ModalProps = {
     subtitleTextID?:string,
 }
 
-
 export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,titleTextID,subtitleTextID}) =>
     <Modal
         className='info-modal'
         open={open}
-        // onClose={handleClose}
         closeAfterTransition
         BackdropProps={{
             timeout: 500,

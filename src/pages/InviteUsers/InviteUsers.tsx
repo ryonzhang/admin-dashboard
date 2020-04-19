@@ -10,10 +10,13 @@ import networkUtils from "../../utils/network";
 import {Form} from "react-bootstrap";
 import {CircularProgress} from "@material-ui/core";
 import {UserInputGroup} from "../../components/UserInputGroup/UserInputGroup";
-import {FieldArray, Formik, useFormik} from "formik";
+import {FieldArray, Formik} from "formik";
 import {CustomContext} from "../../contexts/custom-context";
 import successIcon from "../../res/images/illustration-success.svg";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
+import authUtils from "../../utils/auth";
+
+
 type InviteUsersProps = {
     onSetActivePage: Function,
     setRefreshTimestamp:Function,
@@ -62,9 +65,9 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                                     targetBackend: 'juvoAdminApis',
                                     url: `/user-mgmt/add-user`,
                                     method: 'POST',
-                                    data: {...user,carrier:'claro_chile'},
+                                    data: {...user,carrier:authUtils.getCarrier()},
                                 },
-                                customContext.user.carrier,
+                                authUtils.getCarrier(),
                             )
                             .catch((error:any) => {
                                 console.log('createUser error', error);

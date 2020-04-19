@@ -7,9 +7,8 @@ import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
 import {FormattedMessage } from "react-intl";
 import {TEXT_ID} from '../../res/languages/lang';
 import networkUtils from "../../utils/network";
-import {CustomContext} from "../../contexts/custom-context";
-import {CircularProgress} from "@material-ui/core";
 import convertUtils from '../../utils/converter';
+import authUtils from "../../utils/auth";
 type UserManagementProps = {
     onSetActivePage: Function,
     onSetUserToEdit: Function,
@@ -33,7 +32,6 @@ export type UserToEdit = {
 }
 
 export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit,className,refreshListTimestamp}) =>{
-    const customContext = useContext(CustomContext);
     const [loading,setLoading]=useState(true);
     const [activeUsers,setActiveUsers]=useState([]);
     const [pendingUsers,setPendingUsers]=useState([]);
@@ -52,7 +50,6 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
         onSetUserToEdit(formattedUserToEdit);
         onSetActivePage(USER_MANAGEMENT_PAGES.EDIT_USER);
     };
-    console.log(customContext);
     useEffect(() => {
         setLoading(true);
         networkUtils
@@ -62,7 +59,7 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
                     url: `/user-mgmt/get-users`,
                     params: { q: `identities.connection:${connectionType}` }, // q params allow switching between email or db
                 },
-                customContext.user.carrier,
+                authUtils.getCarrier()
             )
             .then((response) => {
                 if (response.status === 200) {
