@@ -39,7 +39,7 @@ export const Main: FunctionComponent = () => {
     // TODO: copy ended here
 
     authUtils.setUser(user);
-    const [activeTab,setActiveTab] = useState((SELECTED_SIDEBAR_TAB as any)[user.department]);
+    const [activeTab,setActiveTab] = useState((SELECTED_SIDEBAR_TAB as any)[user && user.department]);
 
     routeUtils.refreshPage();
 
@@ -65,14 +65,14 @@ export const Main: FunctionComponent = () => {
               role={user.department}
               perform='view:user-management'
               yes={()=>(
-                  <UserManagement className={(activeTab===SIDEBAR_TABS.USER_MANAGEMENT || 'main-hidden') as string}/>
+                  <UserManagement className={(activeTab===SIDEBAR_TABS.USER_MANAGEMENT ? '':'main-hidden') as string}/>
               )}
           />
           <Can
               role={user.department}
               perform='view:customer-support'
               yes={()=>(
-                  <CustomerSupport className={(activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT || 'main-hidden') as string}/>
+                  <CustomerSupport className={(activeTab===SIDEBAR_TABS.CUSTOMER_SUPPORT ? '':'main-hidden') as string}/>
               )}
           />
       </div>
