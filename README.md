@@ -1,68 +1,107 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Juvo Admin Dashboard
 
-## Available Scripts
+This project is designed to provide up-to-date clients-related information to the admin staff who handles the daily business operations for our tel-com partners. Currently supported modules encompass `User Management` and `Customer Support`. `User Management` function enables platform admin users to add/edit/remove existing staff members with required access right meanwhile `Customer Support` will empower the customer service staff with latest data.
 
-In the project directory, you can run:
+### How to Run this Project
 
-### `yarn start`
+Download this project and run `npm install` and `npm start`
+> Bear in mind that this project has to run in conjunction with https://github.com/juvoinc/juvo-admin-panel-services
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Folder structure
+    .
+    ├── public                  # static page resources
+    ├── src                     # source folder as major code base
+    │   ├── components          # reusable parts for presentation layer
+    │   ├── contexts            # customized context(react jargon)
+    │   ├── pages               # irreusable parts for presentation layer, normally occupy the entire screen
+    │   ├── rbac                # role based access control related file, including config defining roles and permissions 
+    │   ├── utils               # reusable functions for convenience
+    │   ├── index.css           # entry css
+    │   ├── index.js            # entry file
+    │   ├── App.js              # global scale js file
+    │   └── App.css             # global scale css 
+    ├── .env                    # used for dot-env package to translate to process environment variable upon start
+    ├── webpack.config.js       # webpack configuration for compiling bundled js
+    ├── tsconfig.json           # ts restraints
+    └── README.md               # This is ME!
+    
+> Advise for future owner: 
+* Please refrain from modifying entry.css,App.css  as their scope is global, it is very easy to lose track
+* For presentation layer, keep the files inside pages and components folder, additional folder won't be neccessary
+* Try to reuse components before creating new ones if the appeareace matches the design requirement majorly, this will help to build a consistent outlook for the entire project and easy to themize the application later
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Key File Structure
 
-### `yarn test`
+The component structure is designed with efficiency and maintenability in mind as below:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```ts
+import React, {Component, FunctionComponent} from 'react';
+import './TabItem.css'
+import {FormattedMessage } from "react-intl";
+import {CircularProgress} from "@material-ui/core";
 
-### `yarn build`
+type SidebarItemProps = {
+    textID:string,
+    selected:boolean,
+    loading?:boolean,
+    onClick?:(event:any)=>void,
+}
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+export const TabItem: FunctionComponent<SidebarItemProps> = ({textID,selected,onClick,loading}) =>
+    <div className={`tab-item ${selected ? 'tab-item-selected':'tab-item-unselected'}`} onClick={onClick}>
+        <text className='tab-item-text'><FormattedMessage id={textID} /></text>
+        {loading && <CircularProgress className='tab-item-loading' size={24}  />}
+    </div>
+```
+A few things to notice:
+* Define the props types at the start of the file and make sure we utilize the features of typescript of assigning meaningful types thus we can catch the error in compile time instead of runtime (this is the essence of using typescript, if you consider this not important, please use js to reduce confusion), thus please be very stingy when defining type as `any`,`object` which is just a shortcut to convert ts to js from the backdoor.
+* Destructuring in parameters in functional component signature, aka this part `({textID,selected,onClick,loading})`, saves the headache in redefining props inside the function body and the generics in `FunctionComponent<SidebarItemProps>` helps you do the type check, which kills two birds with one stone.
+* For pure functional components(without state, context, effect in function body), use => directly followed by the tsx for component, otherwise use =>{ function body; return <component>}
+  
+> Advise for future owner: It is respectful if better structure can be deployed across the project with some thoughtful benefits
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Naming Convention
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+For better maintenability, the code base should honor the best practices and also some customized practices in this repo.
 
-### `yarn eject`
+#### Folder Naming
+1. Component and pages should each have a separate folder with Capitalized Camel naming such as `TabItem`, `UserManagement`
+2. Other folder names should be better restrained to one word in lower case, if composed of more than one word, use dash-case.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### File Naming
+* Component and pages should each have two files, `tsx` and `css` with Capitalized Camel naming such as `TabItem.css`, `TabItem.tsx`
+* Other file names should be better restrained to one word in lower case, if composed of more than one word, use dash-case.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### Variable Naming
+* constants which will never be changed or used for exports should be in uppercase, such as `SELECTED_SIDEBAR_TAB`
+* enums use UPPER_SNAKE_CASE like `TEXT_ID`
+* other functions and variables are named with lowerCamelCase 
+* css classes should be name-spaced with the component name, e.g.  `TabItem.js` and`TabItem.css` should contain only classes prefixed with `tab-item-` and  
+* css classes use lower-dash-case
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+>Advise for future owner: 
+* currently there are not very stringent rules with respect to variable naming, however some suggests to name boolean variable starting with is/has/should/can... for example `isOpen`
+* some commonsense like method starting with `get` should not perform mutation secretly and function should start with verb
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Role Based Access Control
+Although currently it is rather a small project, it is better to keep the future in mind and seriously consider extensibility.
+As the top philosophy as programming is to decouple, Role based access control concerns four entities `user`, `role`, `permission` and `component`.<br/>
+The entire flow goes like this: user of certain role will have a certain permission in accessing certain component. With this in mind, a configuration file and a component are designed to cater this need.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+#### rules.ts
+```ts
+const userCheck = ({ userId, ownerId }) => {
+  if (!userId || !ownerId) return false
+  return userId === ownerId
+}
+const rules = {
+    juvo: {
+        static: [
+            'view:user-management',
+            'view:customer-support'
+        ],
+        dynamic: {
+          'edit:consumer': userCheck,
+        }
+    },
+```
