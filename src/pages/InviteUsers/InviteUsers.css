@@ -3,7 +3,14 @@
     flex-direction:column;
     height:100vh;
 }
-.invite-users-title,.invite-users-panel-title{
+.invite-users-title{
+    min-height: 45px;
+    margin-top:26px;
+    padding-left: 32px;
+    border-bottom: 1px #e6eaee solid;
+    display: flex;
+}
+.invite-users-panel-title{
     height: 49px;
     margin-top:25px;
     padding-left: 32px;

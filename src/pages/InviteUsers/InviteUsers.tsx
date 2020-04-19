@@ -16,6 +16,8 @@ import successIcon from "../../res/images/illustration-success.svg";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 type InviteUsersProps = {
     onSetActivePage: Function,
+    setRefreshTimestamp:Function,
+    className?:string,
 }
 
 let yup = require('yup');
@@ -34,12 +36,12 @@ const schema = yup.object().shape({
 
 
 
-export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePage}) => {
+export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePage,className,setRefreshTimestamp}) => {
     const [loading,setLoading]=useState(false);
     const [isModalOpen,setModalOpen]=useState(false);
 
     const customContext = useContext(CustomContext);
-    return <div className='invite-users' onClick={()=>{if(isModalOpen)onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}>
+    return <div className={`invite-users ${className}`} onClick={()=>{if(isModalOpen){setModalOpen(false);onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}}>
         <div className='invite-users-title' onClick={() => {
             onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)
         }}>
@@ -76,6 +78,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                         });
                     setLoading(false);
                     setModalOpen(true);
+                    setRefreshTimestamp(new Date());
                 }
                 }>
                 {({

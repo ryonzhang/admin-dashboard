@@ -1,9 +1,5 @@
-import Typography from "@material-ui/core/Typography";
 import React, {FunctionComponent, useContext, useState} from "react";
 import './EditUser.css'
-import {TabItem} from "../../components/Tab/TabItem/TabItem";
-import {Tab} from "../../components/Tab/Tab";
-import {Table} from "../../components/Table/Table";
 import backIcon from '../../res/images/ic-back.svg'
 import {UserInputGroup} from "../../components/UserInputGroup/UserInputGroup";
 import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
@@ -20,7 +16,9 @@ import {InfoModal} from "../../components/InfoModal/InfoModal";
 import {InfoDialog} from "../../components/InfoDialog/InfoDialog";
 type EditUserProps = {
     onSetActivePage: Function,
-    userToEdit?:UserToEdit
+    setRefreshTimestamp:Function,
+    userToEdit?:UserToEdit,
+    className?:string,
 }
 
 let yup = require('yup');
@@ -32,7 +30,7 @@ const schema = yup.object({
 
 
 
-export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,userToEdit}) =>{
+export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,userToEdit,className,setRefreshTimestamp}) =>{
     const customContext = useContext(CustomContext);
     const [isModalOpen,setModalOpen]=useState(false);
     const [isDialogOpen,setDialogOpen]=useState(false);
@@ -52,9 +50,10 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
             .catch((error:any) => {
                 console.log('deleteUser error', error);
             });
+        setRefreshTimestamp(new Date());
         onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);
     };
-    return <div className='edit-user' onClick={()=>setModalOpen(false)}>
+    return <div className={`edit-user ${className}`} onClick={()=>setModalOpen(false)}>
             <div className='edit-user-title' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)}}>
                 <img className='edit-user-icon' src={backIcon}/>
                 <text className='edit-user-title-text'><b><FormattedMessage id={TEXT_ID.RETURN_TO_USER_MANAGEMENT}/></b></text>
@@ -78,6 +77,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                                     setLoading(false);
                                     console.error('updateUser error:', error);
                                 });
+                            setRefreshTimestamp(new Date());
                             setLoading(false);
                             setModalOpen(true);
                         }}

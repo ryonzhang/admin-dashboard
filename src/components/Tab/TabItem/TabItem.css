@@ -24,3 +24,8 @@
 .tab-item-unselected{
     color:#797676 ;
 }
+.tab-item-loading{
+    position:relative;
+    left:10px;
+    top:4px;
+}

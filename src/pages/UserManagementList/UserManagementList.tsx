@@ -13,6 +13,8 @@ import convertUtils from '../../utils/converter';
 type UserManagementProps = {
     onSetActivePage: Function,
     onSetUserToEdit: Function,
+    className?:string,
+    refreshListTimestamp:Date|null,
 }
 
 const connectionType = 'email';
@@ -30,7 +32,7 @@ export type UserToEdit = {
     department:string,
 }
 
-export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit}) =>{
+export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSetActivePage,onSetUserToEdit,className,refreshListTimestamp}) =>{
     const customContext = useContext(CustomContext);
     const [loading,setLoading]=useState(true);
     const [activeUsers,setActiveUsers]=useState([]);
@@ -38,7 +40,6 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
     const [activeTab,setActiveTab]=useState(USER_MANAGEMENT_TABS.ACTIVE_USERS);
 
     const action=(index:string)=>{
-        onSetActivePage(USER_MANAGEMENT_PAGES.EDIT_USER);
         const userToEdit:any=[...activeUsers,...pendingUsers].find((user:any)=> user.user_id === index);
         const formattedUserToEdit: UserToEdit= userToEdit && {
             userId:userToEdit.user_id,
@@ -49,6 +50,7 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
         };
         console.log(formattedUserToEdit);
         onSetUserToEdit(formattedUserToEdit);
+        onSetActivePage(USER_MANAGEMENT_PAGES.EDIT_USER);
     };
     console.log(customContext);
     useEffect(() => {
@@ -76,24 +78,23 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
             .catch((error) => {
                 console.error('getUsers error: ', error);
                setLoading(false);
-            })},[]
+            })},[refreshListTimestamp]
     );
-    return <div className='user-management'>
-        <div className='user-management-title'>
-            <text className='user-management-title-text' onClick={()=>console.log(activeUsers)}><b><FormattedMessage id={TEXT_ID.USER_MANAGEMENT}/></b></text>
-            <button className='user-management-invite-btn' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.INVITE_USERS)}}>
+    return <div className={`user-management-list ${className}`}>
+        <div className='user-management-list-title'>
+            <text className='user-management-list-title-text' onClick={()=>console.log(activeUsers)}><b><FormattedMessage id={TEXT_ID.USER_MANAGEMENT}/></b></text>
+            <button className='user-management-list-invite-btn' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.INVITE_USERS)}}>
                 <FormattedMessage id={TEXT_ID.INVITE_NEW_USERS}/>
             </button>
         </div>
-        <div className='user-management-content'>
-            <div className='user-management-panel'>
+        <div className='user-management-list-content'>
+            <div className='user-management-list-panel'>
                 <Tab>
-                    <TabItem textID={TEXT_ID.ACTIVE_USERS} selected={activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.ACTIVE_USERS)} />
-                    <TabItem textID={TEXT_ID.PENDING_USERS} selected={activeTab===USER_MANAGEMENT_TABS.PENDING_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.PENDING_USERS)}/>
+                    <TabItem textID={TEXT_ID.ACTIVE_USERS} selected={activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.ACTIVE_USERS)} loading={loading}/>
+                    <TabItem textID={TEXT_ID.PENDING_USERS} selected={activeTab===USER_MANAGEMENT_TABS.PENDING_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.PENDING_USERS)} loading={loading}/>
                 </Tab>
                 {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} IDs={(activeUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole','last_login_date','last_login_time']))} actionTextID={TEXT_ID.EDIT} action={action}/>:
                 <Table indexed={true} IDs={(pendingUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE]} rows={pendingUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
-                {loading && <CircularProgress className='user-management-loading' size={50}  />}
             </div>
         </div>
     </div>

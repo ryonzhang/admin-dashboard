@@ -41,6 +41,9 @@
     border:1px #f0f0f0 solid;
     border-radius: 5px;
 }
+.user-management-hidden{
+    display:none !important;
+}
 
 
 
