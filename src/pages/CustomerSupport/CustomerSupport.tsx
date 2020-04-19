@@ -1,4 +1,3 @@
-import Typography from "@material-ui/core/Typography";
 import React, {FunctionComponent, useContext, useState} from "react";
 import './CustomerSupport.css'
 import {TabItem} from "../../components/Tab/TabItem/TabItem";

@@ -47,7 +47,6 @@ export const Login: FunctionComponent<LoginProps> = () =>{
     return <CustomContext.Consumer>
         {({locale,setLocale})=>
             <div className='login' onClick={()=>setModalOpen(false)}>
-                <InfoModal open={false} icon={requestSuccessIcon} titleTextID={TEXT_ID.SUCCESSFULLY_REQUESTED_LINK} subtitleTextID={TEXT_ID.WE_SENT_YOU_THE_LINK_VIA_EMAIL}/>
                 <div className='login-container'>
                     <div className='login-request-email'>
                         <text className='login-request-email-welcome'><FormattedMessage id={TEXT_ID.WELCOME}/></text>

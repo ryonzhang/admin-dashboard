@@ -26,7 +26,7 @@
     margin-left:5px;
 }
 .invite-users-invite-btn{
-    width: 120px;
+    width: 170px;
     height: 36px;
     border-radius: 5px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
@@ -37,6 +37,9 @@
     color: white;
     margin-right:31.5px;
 }
+.invite-users-hidden-btn{
+    display: none;
+}
 .invite-users-content{
     background-color: #fbfbfb;
     width:100%;
@@ -44,6 +47,7 @@
 .invite-users-panel{
     background-color: white;
     margin:30px;
+    min-height: 900px;
     border:1px #f0f0f0 solid;
     border-radius: 5px;
 }
@@ -55,7 +59,39 @@
     color: #3e3f42;
     flex-grow: 1;
 }
-
+.invite-users-add-more{
+    padding-left:29px;
+    padding-top:24px;
+}
+.invite-users-add-more-icon{
+    width: 20px;
+    height: 20px;
+}
+.invite-users-add-more-text{
+    height: 19px;
+    font-size: 16px;
+    color: #4d9bea;
+    position:relative;
+    top:-5px;
+    left:8px;
+}
+.invite-users-invite-btn-disabled{
+    width: 170px;
+    height: 36px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #8fbaec;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    color: white;
+    margin-right:31.5px;
+}
+.invite-users-submit-loading{
+    position:relative;
+    left:-125px;
+    top:5px;
+}
 
 
 

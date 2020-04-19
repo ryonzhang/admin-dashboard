@@ -7,7 +7,7 @@ type ModalProps = {
     open:boolean,
     icon:string,
     titleTextID:string,
-    subtitleTextID:string,
+    subtitleTextID?:string,
 }
 
 
@@ -25,7 +25,7 @@ export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,titleTextID,
             <div className='info-modal-container'>
                 <img className='info-modal-icon' src={icon}/>
                 <text className='info-modal-title'><FormattedMessage id={titleTextID}/></text>
-                <text className='info-modal-subtitle'><FormattedMessage id={subtitleTextID}/></text>
+                {subtitleTextID && <text className='info-modal-subtitle'><FormattedMessage id={subtitleTextID}/></text>}
             </div>
         </Fade>
     </Modal>

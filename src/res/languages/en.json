@@ -55,6 +55,7 @@
   "TEXT_ID_THIS_ACTION_IS_PERMANENT_AND_NOT_REVERSIBLE":"This action is permanent and not reversible!",
   "TEXT_ID_YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS":"You’ve successfully invited new users!",
   "TEXT_ID_YOU_VE_SUCCESSFULLY_INVITED_NEW_USER":"You’ve successfully invited new user!",
+  "TEXT_ID_YOU_VE_SUCCESSFULLY_SAVED_USER":"You’ve successfully saved this user!",
   "TEXT_ID_INVITING_NEW_USERS_UNSUCCESSFUL":"Inviting new user(s) unsuccessful",
   "TEXT_ID_CUSTOMER_LOOKUP":"Customer Lookup",
   "TEXT_ID_SEARCH_CUSTOMER":"Search Customer",

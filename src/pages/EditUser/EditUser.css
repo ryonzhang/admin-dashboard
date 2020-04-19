@@ -25,7 +25,7 @@
     margin-top:-4px;
     margin-left:5px;
 }
-.edit-user-invite-btn{
+.edit-user-save-btn,.edit-user-remove-btn{
     width: 120px;
     height: 36px;
     border-radius: 5px;
@@ -36,6 +36,23 @@
     line-height: 1.14;
     color: white;
     margin-right:31.5px;
+}
+.edit-user-save-btn-loading{
+    width: 120px;
+    height: 36px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
+    background-color: #8fbaec;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    color: white;
+    margin-right:31.5px;
+}
+.edit-user-submit-loading{
+    position:relative;
+    left:-100px;
+    top:5px;
 }
 .edit-user-content{
     background-color: #fbfbfb;
