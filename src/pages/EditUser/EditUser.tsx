@@ -4,14 +4,13 @@ import backIcon from '../../res/images/ic-back.svg'
 import {UserInputGroup} from "../../components/UserInputGroup/UserInputGroup";
 import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
 import {TEXT_ID} from "../../res/languages/lang";
-import {FormattedMessage } from "react-intl";
+import {FormattedMessage, IntlContext} from "react-intl";
 import {Formik} from "formik";
 import {Form} from "react-bootstrap";
 import {CircularProgress} from "@material-ui/core";
 import successIcon from "../../res/images/illustration-success.svg";
 import {UserToEdit} from "../UserManagementList/UserManagementList";
 import networkUtils from "../../utils/network";
-import {CustomContext} from "../../contexts/custom-context";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import {InfoDialog} from "../../components/InfoDialog/InfoDialog"
 import authUtils from "../../utils/auth";
@@ -23,21 +22,16 @@ type EditUserProps = {
     className?:string,
 }
 
-let yup = require('yup');
-const schema = yup.object({
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    email: yup.string().email().required(),
-});
+
 
 
 
 export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,userToEdit,className,setRefreshTimestamp}) =>{
-    const customContext = useContext(CustomContext);
     const [isModalOpen,setModalOpen]=useState(false);
     const [isDialogOpen,setDialogOpen]=useState(false);
     const [loading,setLoading]=useState(false);
     const [loadingForRemoval,setLoadingForRemoval]=useState(false);
+    const intlContext =useContext(IntlContext);
     const onRemove=async ()=>{
         setLoadingForRemoval(true);
         await networkUtils
@@ -55,6 +49,15 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
         setRefreshTimestamp(new Date());
         onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);
     };
+
+    // validation texts
+    let yup = require('yup');
+    const schema = yup.object({
+        firstName: yup.string().required(),
+        lastName: yup.string().required(),
+        email: yup.string().email().required(intlContext.formatMessage({id:TEXT_ID.EDIT_USER})),
+    });
+
     return <div className={`edit-user ${className}`} onClick={()=>setModalOpen(false)}>
             <div className='edit-user-title' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)}}>
                 <img className='edit-user-icon' src={backIcon}/>
