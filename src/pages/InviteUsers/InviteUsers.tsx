@@ -113,11 +113,10 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                                                 <UserInputGroup namePrefix={`users[${index}]`} values={user} errors={(errors.users||[])[index]} handleChange={handleChange} setFieldValues={setFieldValue} deleteable={values.users.length>1} onDelete={()=>{arrayHelpers.remove(index)}}/>
                                             </div>
                                         ))}
-                                        <div className='invite-users-add-more' onClick={() => {arrayHelpers.push({firstName:'',lastName:'',email:'',department:'' });console.log('a'+errors)}}>
+                                        <div className='invite-users-add-more' onClick={() => {arrayHelpers.push({firstName:'',lastName:'',email:'',department:'' });}}>
                                             <img className='invite-users-add-more-icon' src={addIcon}/>
                                             <text className='invite-users-add-more-text'><FormattedMessage id={TEXT_ID.ADD_MORE}/></text>
                                         </div>
-
                                     </div>
                                 )}
                             />
