@@ -326,4 +326,29 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
     </Form.Group>
  ```
 ### Auth Solution(!Need to revise)
-Currently the repo relies on Auth0 to handle the authentication and authorization which makes use of user-management APIs. These APIs are notoriously slow, probably as a hindrance for users actually calling them in order to promote their delegated user management page:https://auth0.com/blog/delegated-admin-v2/. The strategy deployed in this repo is passwordless login specified in https://auth0.com/passwordless where the user is sent an email to login upon request from the portal, and from that Auth0 login link, we are able to extract the auth token bearing the key information including the user's role, carrier,etc. We have put the auth related information in the Cookies and upon logout, we delete from the cookies.
+Currently the repo relies on Auth0 to handle the authentication and authorization which makes use of user-management APIs. These APIs are notoriously slow, probably as a hindrance for users actually calling them in order to promote their delegated user management page:https://auth0.com/blog/delegated-admin-v2/. The strategy deployed in this repo is passwordless login specified in https://auth0.com/passwordless where the user is sent an email to login upon request from the portal, and from that Auth0 login link, we are able to extract the auth token bearing the key information including the user's role, carrier,etc. We have put the auth related information in the Cookies and upon logout, we delete from the cookies.<br/>
+The reason for a second look into this solution is because of the super slow API, unneccessary cost attached to Auth0 and a separate database to hold essencial information for security concern.
+
+### Some Tricks or Hacks 
+#### CSS `!Important`
+As a common knowledge that css !important is an ugly hack in most cases, as it overwrites the other styles dominantly but hard to trace back the culprit. The reason this is used in a couple of places in the repo is try to overwrite the styles in other libraries, as the other library sometimes attach many css styles to a single element which makes it almost impossible to overwrite unless with more customized classes attached to it(even uglier) or an `!important` annotator.<br/>
+To ease the situation, the css files in the repo is consistently namespaced to avoid the situation of possible conflict.
+#### Redirection Trap
+As noted, this project will persistently show window.location as the host without query or path. As a simple application it is actually plausible as we don't want to land a user at a url linking to a page where the user does not have authority to view. However we do need the `window.location` to present us with some information(like the auth token of the Auth0 passwordless link) or for refresh the page. Thus the dirty hack comes to the stage:
+```ts
+/**
+ * TODO:This file is an expediency for this small Single Page Application, if the project expands , recommend to change to react-router
+ */
+const refreshPage = () => {
+    if(window.location.href!==window.location.origin+'/') window.location.href = window.location.origin;
+};
+const reLogin = () => {
+    window.location.href = window.location.origin+'/login';
+};
+
+// @ts-ignore
+export default {refreshPage, reLogin};
+```
+Once the authToken is retrieved from `window.location`, it is parsed and stored in the cookies then directly we call refreshPage to reset the `window.location` in a prehistoric javascript way which should be later adapted to `react-router`.
+Also, by calling `reLogin` it effectively refresh the page as the page sticks to `window.location.origin` if `window.location` is never touched.
+
