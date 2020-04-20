@@ -182,3 +182,70 @@ After knowing the mechanism of the architecture, let's dive in one use case, see
   />
   ```
 In the component page, pass role parameters in `role` and permission requested in `perform`, if you also need some dynamic permissions check, put them in side `data` and make sure the keys match with the user-defined function paramters in `rules.ts`, and add the `yes` component and `no` component which will correspondingly rendered when the permission is granted and not. Specific to this case, the user who have been granted a role with either static permission `edit:restaurants` or dynamic permission `edit:restaurants` who passes userCheck function with parameters `userId: user.id,ownerId:restaurant.owner_id`, will have their page rendered with `yes` component, and `no` component otherwise.
+
+### Internationalization/i18n/Localization
+
+The package in use is https://github.com/formatjs/react-intl because of its flexibility. Here I will list down the skeleton of how to start with this package and two use case to configure the localized texts.
+
+#### Skeleton of Internationalization
+
+The package requires a locale-keyed text-id-to-localized-string map. Text-id-to-localized-string map means each string in every language should be assigned a text-id like below:
+```ts
+const en={
+  "TEXT_ID_CONFIRM": "Confirm",
+  "TEXT_ID_CANCEL": "Cancel",
+  "TEXT_ID_EDIT": "Edit",
+  "TEXT_ID_CLOSE": "Close",
+ }
+ ```
+which should be assigned with a locale key to this map like below in `lang.ts`:
+```ts
+export const textPool = {en:en,'es-CL':es_CL}
+ ```
+After that the package pretty much will handle the internal logic of finding the right map to use when you want to request a text.<br/>
+
+This only works within the package context called `IntlContext`, thus I have put the context across the entire project by wrapping the <App/> component like below:
+```ts
+import React,{useState} from 'react';
+import {Main} from "./pages/Main/Main";
+import { IntlProvider, FormattedMessage } from "react-intl";
+import {textPool} from "./res/languages/lang";
+import {CustomContext} from "./contexts/custom-context";
+
+export default function App(props) {
+  const [locale,setLocale]=useState('es-CL');
+  const value ={locale,setLocale}
+  return (
+      <CustomContext.Provider value={value}>
+        <IntlProvider locale={locale} messages={textPool[locale]}>
+          <Main/>
+        </IntlProvider>
+      </CustomContext.Provider>
+  );
+}
+```
+#### How can we change locale/language?
+We normally change based on user trigger like clicking button or selecting dropdown options. In presentation layer, we can add our context consumer to provide the functionality of the package like below:
+```ts
+<CustomContext.Consumer>
+    {({setLocale})=>
+        <div className='login-language'>
+            <text className='login-language-option' onClick={()=>setLocale('en')}>English</text>
+            <text className='login-language-option' onClick={()=>setLocale('es-CL')}>Español</text>
+        </div> 
+    }
+</CustomContext.Consumer>
+ ```
+#### How can we deploy a text of the selected locale?
+The locale is in the backdrop as the user also selected or by system default. Thus finding the string should only be a matter of the right text-id.
+1. Deploy string using component
+Use the following component provided by this package to get the text of the selected locale
+```ts
+<FormattedMessage id={TEXT_ID.WELCOME}/>
+```
+2. Get string in the preprocessing phase
+Sometimes, we use other people's component which we cannot pass in the text-id or pass in the `<FormattedMessage id={TEXT_ID.WELCOME}/>` componnet, so we need to preprocess the text-id to obtain the corresponding text of given locale. We need to get the context in the js code and using the context functions to make it like below:
+```ts
+const intlContext =useContext(IntlContext);
+const editUserText=intlContext.formatMessage({id:TEXT_ID.EDIT_USER});
+```
