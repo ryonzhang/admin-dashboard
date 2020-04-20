@@ -325,3 +325,5 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
         </Form.Control.Feedback>
     </Form.Group>
  ```
+### Auth Solution(!Need to revise)
+Currently the repo relies on Auth0 to handle the authentication and authorization which makes use of user-management APIs. These APIs notoriously slow, probably as a hindrance for users actually calling them in order to promote their delegated user management page:https://auth0.com/blog/delegated-admin-v2/. The strategy deployed in this repo is passwordless login specified in https://auth0.com/passwordless where the user is sent an email to login upon request from the portal, and from that Auth0 login link, we are able to extract the auth token bearing the key information including the user's role, carrier,etc. We have put the auth related information in the Cookies and upon logout, we delete from the cookies.
