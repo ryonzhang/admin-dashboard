@@ -238,12 +238,12 @@ We normally change based on user trigger like clicking button or selecting dropd
  ```
 #### How can we deploy a text of the selected locale?
 The locale is in the backdrop as the user also selected or by system default. Thus finding the string should only be a matter of the right text-id.
-1. Deploy string using component
+1. Deploy string using component<br/>
 Use the following component provided by this package to get the text of the selected locale
 ```ts
 <FormattedMessage id={TEXT_ID.WELCOME}/>
 ```
-2. Get string in the preprocessing phase
+2. Get string in the preprocessing phase<br/>
 Sometimes, we use other people's component which we cannot pass in the text-id or pass in the `<FormattedMessage id={TEXT_ID.WELCOME}/>` componnet, so we need to preprocess the text-id to obtain the corresponding text of given locale. We need to get the context in the js code and using the context functions to make it like below:
 ```ts
 const intlContext =useContext(IntlContext);
