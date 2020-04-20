@@ -2,6 +2,41 @@
 
 This project is designed to provide up-to-date clients-related information to the admin staff who handles the daily business operations for our tel-com partners. Currently supported modules encompass `User Management` and `Customer Support`. `User Management` function enables platform admin users to add/edit/remove existing staff members with required access right meanwhile `Customer Support` will empower the customer service staff with latest data.
 
+## Table of Contents
+- [Juvo Admin Dashboard](#juvo-admin-dashboard)
+  * [Design Page](#design-page)
+  * [Jira board](#jira-board)
+  * [How to Run this Project](#how-to-run-this-project)
+  * [Folder structure](#folder-structure)
+  * [Key File Structure](#key-file-structure)
+  * [Naming Convention](#naming-convention)
+    + [Folder Naming](#folder-naming)
+    + [File Naming](#file-naming)
+    + [Variable Naming](#variable-naming)
+  * [Role Based Access Control](#role-based-access-control)
+    + [rules.ts](#rulests)
+  * [Internationalization or i18n orLocalization](#internationalization-or-i18n-orlocalization)
+    + [Skeleton of Internationalization](#skeleton-of-internationalization)
+    + [How we can change locale or language](#how-we-can-change-locale-or-language)
+    + [How we can deploy a text of the selected locale](#how-we-can-deploy-a-text-of-the-selected-locale)
+  * [Form](#form)
+    + [Array of Input Groups](#array-of-input-groups)
+    + [Validation with Customized Localized Messages](#validation-with-customized-localized-messages)
+    + [Adapt Customized Input Component to Formik](#adapt-customized-input-component-to-formik)
+  * [Auth Solution-Need to revise](#auth-solution-need-to-revise)
+  * [Some Tricks or Hacks](#some-tricks-or-hacks)
+    + [CSS-Important](#css-important)
+    + [Redirection Trap](#redirection-trap)
+  * [Maintenance Team](#maintenance-team)
+    + [Point of contact in Slack](#point-of-contact-in-slack)
+  * [Thank You](#thank-you)
+
+### Design Page
+https://app.zeplin.io/project/5c659a2ba981283c0b88f669
+
+### Jira board
+https://juvomobile.atlassian.net/jira/software/projects/BO/boards/193
+
 ### How to Run this Project
 
 Download this project and run `npm install` and `npm start`
@@ -183,7 +218,7 @@ After knowing the mechanism of the architecture, let's dive in one use case, see
   ```
 In the component page, pass role parameters in `role` and permission requested in `perform`, if you also need some dynamic permissions check, put them in side `data` and make sure the keys match with the user-defined function paramters in `rules.ts`, and add the `yes` component and `no` component which will correspondingly rendered when the permission is granted and not. Specific to this case, the user who have been granted a role with either static permission `edit:restaurants` or dynamic permission `edit:restaurants` who passes userCheck function with parameters `userId: user.id,ownerId:restaurant.owner_id`, will have their page rendered with `yes` component, and `no` component otherwise.
 
-### Internationalization/i18n/Localization
+### Internationalization or i18n orLocalization
 
 The package in use is https://github.com/formatjs/react-intl because of its flexibility. Here I will list down the skeleton of how to start with this package and two use case to configure the localized texts.
 
@@ -224,7 +259,7 @@ export default function App(props) {
   );
 }
 ```
-#### How can we change locale/language?
+#### How we can change locale or language
 We normally change based on user trigger like clicking button or selecting dropdown options. In presentation layer, we can add our context consumer to provide the functionality of the package like below:
 ```ts
 <CustomContext.Consumer>
@@ -236,7 +271,7 @@ We normally change based on user trigger like clicking button or selecting dropd
     }
 </CustomContext.Consumer>
  ```
-#### How can we deploy a text of the selected locale?
+#### How we can deploy a text of the selected locale
 The locale is in the backdrop as the user also selected or by system default. Thus finding the string should only be a matter of the right text-id.
 1. Deploy string using component<br/>
 Use the following component provided by this package to get the text of the selected locale
@@ -325,12 +360,12 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
         </Form.Control.Feedback>
     </Form.Group>
  ```
-### Auth Solution(!Need to revise)
+### Auth Solution-Need to revise
 Currently the repo relies on Auth0 to handle the authentication and authorization which makes use of user-management APIs. These APIs are notoriously slow, probably as a hindrance for users actually calling them in order to promote their delegated user management page:https://auth0.com/blog/delegated-admin-v2/. The strategy deployed in this repo is passwordless login specified in https://auth0.com/passwordless where the user is sent an email to login upon request from the portal, and from that Auth0 login link, we are able to extract the auth token bearing the key information including the user's role, carrier,etc. We have put the auth related information in the Cookies and upon logout, we delete from the cookies.<br/>
 The reason for a second look into this solution is because of the super slow API, unneccessary cost attached to Auth0 and a separate database to hold essencial information for security concern.
 
 ### Some Tricks or Hacks 
-#### CSS `!Important`
+#### CSS-Important
 As a common knowledge that css !important is an ugly hack in most cases, as it overwrites the other styles dominantly but hard to trace back the culprit. The reason this is used in a couple of places in the repo is try to overwrite the styles in other libraries, as the other library sometimes attach many css styles to a single element which makes it almost impossible to overwrite unless with more customized classes attached to it(even uglier) or an `!important` annotator.<br/>
 To ease the situation, the css files in the repo is consistently namespaced to avoid the situation of possible conflict.
 #### Redirection Trap
@@ -352,3 +387,14 @@ export default {refreshPage, reLogin};
 Once the authToken is retrieved from `window.location`, it is parsed and stored in the cookies then directly we call refreshPage to reset the `window.location` in a prehistoric javascript way which should be later adapted to `react-router`.
 Also, by calling `reLogin` it effectively refresh the page as the page sticks to `window.location.origin` if `window.location` is never touched.
 
+### Maintenance Team
+Juvo Singapore Team takes charge of the life cycle of this project. 
+#### Point of contact in Slack
+* Development related issue: Ruiyang Zhang
+* Test/QA: Artur Mirzakhanyan
+* Product/Translation: Raul Gonzalez
+* Backend Support: Namrata Honnavar
+* Designer: Melissa Issorat
+
+### Thank You
+I am cordially grateful for your visit, for any questions or concerns, please do not hesitate to raise issue or contact me through slack(id:Ruiyang Zhang), Hope you have a rocking day ahead!
