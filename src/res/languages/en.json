@@ -95,5 +95,11 @@
   "TEXT_ID_USER_IS_FOUND_AS_AN_ACTIVE_USER":"User is found as an active user",
   "TEXT_ID_USER_IS_FOUND_AS_AN_PENDING_USER":"User is found as an pending user",
   "TEXT_ID_ADMIN":"admin",
-  "TEXT_ID_PLEASE_SELECT_AN_OPTION":"Please select an option"
+  "TEXT_ID_PLEASE_SELECT_AN_OPTION":"Please select an option",
+  "TEXT_ID_FIRST_NAME_IS_A_REQUIRED_FIELD":"First Name is a required field",
+  "TEXT_ID_LAST_NAME_IS_A_REQUIRED_FIELD":"Last Name is a required field",
+  "TEXT_ID_EMAIL_IS_A_REQUIRED_FIELD":"Email is a required field",
+  "TEXT_ID_DEPARTMENT_IS_A_REQUIRED_FIELD":"Department is a required field",
+  "TEXT_ID_EMAIL_MUST_BE_A_VALID_EMAIL":"Email must be a valid email",
+  "TEXT_ID_MSISDN_IS_A_REQUIRED_FIELD":"MSISDN is a required field"
 }

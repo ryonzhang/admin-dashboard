@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useState} from "react";
+import React, {FunctionComponent, useContext, useState} from "react";
 import './Login.css'
 import signInIcon from '../../res/images/illustration-sign-in.svg'
 import {Formik} from "formik";
@@ -6,7 +6,7 @@ import {Form} from "react-bootstrap";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import requestSuccessIcon from '../../res/images/ic-landing-success.svg'
 import {TEXT_ID} from "../../res/languages/lang";
-import {FormattedMessage} from "react-intl";
+import {FormattedMessage, IntlContext} from "react-intl";
 import {CustomContext} from "../../contexts/custom-context";
 import {AxiosResponse} from "axios";
 import networkUtils from '../../utils/network';
@@ -16,9 +16,7 @@ type LoginProps = {
 }
 let yup = require('yup');
 
-const schema = yup.object({
-    email: yup.string().email().required(),
-});
+
 
 
 
@@ -44,8 +42,12 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                 console.log(e);
             });
     };
+    const intlContext =useContext(IntlContext);
+    const schema = yup.object({
+        email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
+    });
     return <CustomContext.Consumer>
-        {({locale,setLocale})=>
+        {({setLocale})=>
             <div className='login' onClick={()=>setModalOpen(false)}>
                 <div className='login-container'>
                     <div className='login-request-email'>

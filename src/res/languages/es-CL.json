@@ -94,5 +94,11 @@
   "TEXT_ID_USER_IS_FOUND_AS_AN_ACTIVE_USER":"El usuario se encuentra como un usuario activo",
   "TEXT_ID_USER_IS_FOUND_AS_AN_PENDING_USER":"El usuario se encuentra como usuario pendiente",
   "TEXT_ID_ADMIN":"admin",
-  "TEXT_ID_PLEASE_SELECT_AN_OPTION":"Seleccione una opción"
+  "TEXT_ID_PLEASE_SELECT_AN_OPTION":"Seleccione una opción",
+  "TEXT_ID_FIRST_NAME_IS_A_REQUIRED_FIELD":"Nombre es un campo obligatorio",
+  "TEXT_ID_LAST_NAME_IS_A_REQUIRED_FIELD":"Apellido es un campo obligatorio",
+  "TEXT_ID_EMAIL_IS_A_REQUIRED_FIELD":"Email es un campo obligatorio",
+  "TEXT_ID_DEPARTMENT_IS_A_REQUIRED_FIELD":"Departamento es un campo obligatorio",
+  "TEXT_ID_EMAIL_MUST_BE_A_VALID_EMAIL":"Email debe ser un email valido",
+  "TEXT_ID_MSISDN_IS_A_REQUIRED_FIELD":"MSISDN es un campo obligatorio"
 }

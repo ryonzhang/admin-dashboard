@@ -23,9 +23,6 @@ type EditUserProps = {
 }
 
 
-
-
-
 export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,userToEdit,className,setRefreshTimestamp}) =>{
     const [isModalOpen,setModalOpen]=useState(false);
     const [isDialogOpen,setDialogOpen]=useState(false);
@@ -53,9 +50,9 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
     // validation texts
     let yup = require('yup');
     const schema = yup.object({
-        firstName: yup.string().required(),
-        lastName: yup.string().required(),
-        email: yup.string().email().required(intlContext.formatMessage({id:TEXT_ID.EDIT_USER})),
+        firstName: yup.string().required(intlContext.formatMessage({id:TEXT_ID.FIRST_NAME_IS_A_REQUIRED_FIELD})),
+        lastName: yup.string().required(intlContext.formatMessage({id:TEXT_ID.LAST_NAME_IS_A_REQUIRED_FIELD})),
+        email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
     });
 
     return <div className={`edit-user ${className}`} onClick={()=>setModalOpen(false)}>

@@ -5,7 +5,7 @@ import backIcon from '../../res/images/ic-back.svg'
 import addIcon from '../../res/images/ic-add.svg'
 import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
 import {TEXT_ID} from "../../res/languages/lang";
-import {FormattedMessage } from "react-intl";
+import {FormattedMessage, IntlContext} from "react-intl";
 import networkUtils from "../../utils/network";
 import {Form} from "react-bootstrap";
 import {CircularProgress} from "@material-ui/core";
@@ -24,26 +24,26 @@ type InviteUsersProps = {
 }
 
 let yup = require('yup');
-const schema = yup.object().shape({
-    users: yup.array()
-        .of(
-            yup.object({
-                firstName: yup.string().required(),
-                lastName: yup.string().required(),
-                email: yup.string().email().required(),
-                department: yup.string().required(),
-            })
-        )
-        .required('Must have users')
-});
+
 
 
 
 export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePage,className,setRefreshTimestamp}) => {
     const [loading,setLoading]=useState(false);
     const [isModalOpen,setModalOpen]=useState(false);
-
-    const customContext = useContext(CustomContext);
+    const intlContext =useContext(IntlContext);
+    const schema = yup.object().shape({
+        users: yup.array()
+            .of(
+                yup.object({
+                    firstName: yup.string().required(intlContext.formatMessage({id:TEXT_ID.FIRST_NAME_IS_A_REQUIRED_FIELD})),
+                    lastName: yup.string().required(intlContext.formatMessage({id:TEXT_ID.LAST_NAME_IS_A_REQUIRED_FIELD})),
+                    email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
+                    department: yup.string().required(intlContext.formatMessage({id:TEXT_ID.DEPARTMENT_IS_A_REQUIRED_FIELD})),
+                })
+            )
+            .required('Must have users')
+    });
     return <div className={`invite-users ${className}`} onClick={()=>{if(isModalOpen){setModalOpen(false);onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}}>
         <div className='invite-users-title' onClick={() => {
             onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)
