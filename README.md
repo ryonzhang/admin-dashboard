@@ -26,7 +26,7 @@ Download this project and run `npm install` and `npm start`
     └── README.md               # This is ME!
     
 > Advise for future owner: 
-* Please refrain from modifying entry.css,App.css  as their scope is global, it is very easy to lose track
+* Please refrain from modifying index.css,App.css  as their scope is global, it is very easy to lose track
 * For presentation layer, keep the files inside pages and components folder, additional folder won't be neccessary
 * Try to reuse components before creating new ones if the appeareace matches the design requirement majorly, this will help to build a consistent outlook for the entire project and easy to themize the application later
 
@@ -101,7 +101,84 @@ const rules = {
             'view:customer-support'
         ],
         dynamic: {
-          'edit:consumer': userCheck,
-        }
+            'edit:users': userCheck,
+            'delete:users': userCheck,
+        },
     },
+    admin: {
+        static: [
+            'view:user-management',
+            'view:customer-support'
+        ],
+    },
+}
 ```
+As the code piece has configured, it has defined two roles, `juvo` and `admin`, for `juvo` role, it has two static permissions, `view:user-management`,`view:customer-support` which means that users of this role will always be allowed to view User Management board and Customer Support Board without question. At the same time, this role is also assigned with some dynamic permissions like `edit:users`. Dynamic permissions are conditional, only by fulfilling the userCheck function condition, the permission can be granted, in this case, the `userId` must be equal ot the `ownerId`.<br/>
+
+Then it comes with the next question, how should we define the visibility or accessibility of certain component in the presentation layer?<br/>
+It will be solved by the following component called `Can` as the permission related packages always use this word, some package is even named as `cancancan` because there is already a package called `cancan`.<br/>
+
+```ts
+import rules from './rules'
+
+const check = (rules:any, role:any, action:any, data:any) => {
+    const permissions:any = rules[role];
+    if (!permissions) {
+        return false
+    }
+
+    const staticPermissions = permissions.static;
+
+    if (staticPermissions && staticPermissions.includes(action)) {
+        return true
+    }
+
+    const dynamicPermissions = permissions.dynamic;
+
+    if (dynamicPermissions) {
+        const permissionCondition = dynamicPermissions[action]
+        if (!permissionCondition) {
+            return false
+        }
+
+        return permissionCondition(data)
+    }
+    return false
+}
+
+const Can = (props:any) =>
+    check(rules, props.role, props.perform, props.data) ? props.yes() : props.no()
+
+Can.defaultProps = {
+    yes: () => null,
+    no: () => null,
+};
+
+export default Can;
+```
+The component can be simply read like this. It takes the rules.ts which we previously defined and takes in the role of the user and check the static permission of the user, if found inside the static permissions, permission granted by returning `true` in function `const check = (rules:any, role:any, action:any, data:any)=>{...}`, if not found, continue to check the dynamic permissions by validating the dynamic permissions inside the role,if present, further checking the `data` parameters provided through the user-defined function in the `rules.ts`, as for this example, `const userCheck = ({ userId, ownerId }) => {...}`.If either of the static or dynamic permissions filter passes, it will render the `yes` component, otherwise the `no` component`.<br/>
+
+After knowing the mechanism of the architecture, let's dive in one use case, see below:
+```ts
+<Can
+    role={user.role}
+    perform="edit:restaurants"
+    data={{
+      userId: user.id,
+      ownerId: restaurant.owner_id,
+    }}
+    yes={() => (
+      <CreateOrEditRestaurantModal
+        user={user}
+        restaurant={restaurant}
+        button={
+          <Button color="white" icon={'edit'} />
+        }
+      />
+    )}
+    no={() => (
+        <div/>
+    )}
+  />
+  ```
+In the component page, pass role parameters in `role` and permission requested in `perform`, if you also need some dynamic permissions check, put them in side `data` and make sure the keys match with the user-defined function paramters in `rules.ts`, and add the `yes` component and `no` component which will correspondingly rendered when the permission is granted and not. Specific to this case, the user who have been granted a role with either static permission `edit:restaurants` or dynamic permission `edit:restaurants` who passes userCheck function with parameters `userId: user.id,ownerId:restaurant.owner_id`, will have their page rendered with `yes` component, and `no` component otherwise.
