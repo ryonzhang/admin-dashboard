@@ -249,3 +249,79 @@ Sometimes, we use other people's component which we cannot pass in the text-id o
 const intlContext =useContext(IntlContext);
 const editUserText=intlContext.formatMessage({id:TEXT_ID.EDIT_USER});
 ```
+> Note to future owner: it is a best practice to define an enum in `lang.ts` to host all the text-ids as it would be super efficient to benefit from the auto-complete functions in IDE with it
+
+### Form 
+Handling forms is made very simple with the help of `formik`, please refer to https://github.com/jaredpalmer/formik for more information about general usage. I just would like to list down some important special usage of the library inside this repo, being array of input groups, validation with customized localized messages, using adapt customized input component to the library.
+
+#### Array of Input Groups
+As in <InviteUsers/> component, it is required to add/remove a group of input boxes, `arrayHelper` comes as a rescue in this case. It will link up with the `values` and fill the input components.
+```ts
+<FieldArray
+    name="users"
+    render={arrayHelpers => (
+        <div>
+            {values.users.map((user, index) => (
+                <div key={index}>
+                    <UserInputGroup namePrefix={`users[${index}]`} values={user} errors={(errors.users||[])[index]} handleChange={handleChange} setFieldValues={setFieldValue} deleteable={values.users.length>1} onDelete={()=>{arrayHelpers.remove(index)}}/>
+                </div>
+            ))}
+            <div className='invite-users-add-more' onClick={() => {arrayHelpers.push({firstName:'',lastName:'',email:'',department:'' });}}>
+                <img className='invite-users-add-more-icon' src={addIcon}/>
+                <text className='invite-users-add-more-text'><FormattedMessage id={TEXT_ID.ADD_MORE}/></text>
+            </div>
+        </div>
+    )}
+/>
+```
+It is worth mentioning the validation piece in this case, `yup` is used for validation and to configure that for array, it is done like below:
+```
+const schema = yup.object().shape({
+    users: yup.array()
+        .of(
+            yup.object({
+                firstName: yup.string().required(),
+                lastName: yup.string().required(),
+                email: yup.string().email().required(),
+                department: yup.string().required(),
+            })
+        )
+        .required('Must have users')
+});
+```
+#### Validation with Customized Localized Messages
+By adding the error text in the restraint function parameter in `yup` object, we can achieve this, see below with i18n:
+```ts
+let yup = require('yup');
+const schema = yup.object({
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    email: yup.string().email().required(intlContext.formatMessage({id:TEXT_ID.EDIT_USER})),
+});
+```
+#### Adapt Customized Input Component to Formik
+If we use Formik official component, the pain is pretty much released because of native support of all the functionalities like `handleChange`, however if we would like to augment our user scenarios most of the time with other user-defined components or input components from other library. the `onChange` method may come in various flavors, some is called `onSelect`,some `onDropdown` with very different function signatures. Definitely those function hooks will not automatically linked with `values`, the central state of formik, which means without proper customized data binding, `values` will not be changed, thus the input box will always hold the stale value for the user no matter what he has input.<br/>
+Thus here we have to use some less commonly used function called `setFieldValue`, with the properly passed name, the value can be set by this method, but keep in mind to pass down this function in the properties to your customized input or input components in other library. Below is an example of customized component used inside formik:
+```ts
+const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,labelTextID,options,handleChange,className,placeholderTextID,setFieldValues,name,error}) =>
+    <Form.Group className={`input-field-dropdown ${className}`}>
+        <Form.Label className='input-field-label'><FormattedMessage id={labelTextID}/></Form.Label>
+        <Dropdown onSelect={ (eventKey:string,e:React.SyntheticEvent<unknown>) => {setFieldValues(name,eventKey)}}>
+            <Dropdown.Toggle id={'dropdown'} className='input-field-content'>
+                {value || <FormattedMessage id={placeholderTextID}/>}
+                <img className='input-field-dropdown-icon' src={dropdownIcon}/>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu className='input-field-dropdown-menu'>
+                {options.map((option) => (
+                    <Dropdown.Item className='input-field-dropdown-menu-item' key={option.key} active={value === option.value} eventKey={option.key}>
+                        {option.value}
+                    </Dropdown.Item>
+                ))}
+            </Dropdown.Menu>
+        </Dropdown>
+        <Form.Control.Feedback className='input-field-feedback' type="invalid">
+            {error}
+        </Form.Control.Feedback>
+    </Form.Group>
+ ```
