@@ -27,6 +27,7 @@ This project is designed to provide up-to-date clients-related information to th
   * [Some Tricks or Hacks](#some-tricks-or-hacks)
     + [CSS-Important](#css-important)
     + [Redirection Trap](#redirection-trap)
+    + [Customer Context](#customer-context)
   * [Maintenance Team](#maintenance-team)
     + [Point of contact in Slack](#point-of-contact-in-slack)
   * [Thank You](#thank-you)
@@ -386,6 +387,29 @@ export default {refreshPage, reLogin};
 ```
 Once the authToken is retrieved from `window.location`, it is parsed and stored in the cookies then directly we call refreshPage to reset the `window.location` in a prehistoric javascript way which should be later adapted to `react-router`.
 Also, by calling `reLogin` it effectively refresh the page as the page sticks to `window.location.origin` if `window.location` is never touched.
+
+#### Customer Context
+You would already notice some special code in the entry point of the application <App/> below:
+```ts
+import React,{useState} from 'react';
+import {Main} from "./pages/Main/Main";
+import { IntlProvider, FormattedMessage } from "react-intl";
+import {textPool} from "./res/languages/lang";
+import {CustomContext} from "./contexts/custom-context";
+
+export default function App(props) {
+  const [locale,setLocale]=useState('es-CL');
+  const value ={locale,setLocale}
+  return (
+      <CustomContext.Provider value={value}>
+        <IntlProvider locale={locale} messages={textPool[locale]}>
+          <Main/>
+        </IntlProvider>
+      </CustomContext.Provider>
+  );
+}
+```
+It appears that using two context providers `CustomContext.Provider` and `IntlProvider` is redundant since both of them handle the locale and language switching. The reason for this trick is simple: For libraries like `IntlProvider` may not grant us the properties or functions we desire sometimes. Such as this case, `IntlContext` does not offer a method to change the locale, therefore we have to strike out for new approach. Adding a globally scoped context which provides desired methods whenever neccessary, in this case, a way to `setLocale`, would be a suitable solution, thus for any newly lashed-out functionalities, they could safely and easily handled by the customized context. 
 
 ### Maintenance Team
 Juvo Singapore Team takes charge of the life cycle of this project. 
