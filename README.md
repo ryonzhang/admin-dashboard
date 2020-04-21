@@ -27,7 +27,7 @@ This project is designed to provide up-to-date clients-related information to th
   * [Some Tricks or Hacks](#some-tricks-or-hacks)
     + [CSS-Important](#css-important)
     + [Redirection Trap](#redirection-trap)
-    + [Customer Context](#customer-context)
+    + [Customer Context](#custom-context)
   * [Maintenance Team](#maintenance-team)
     + [Point of contact in Slack](#point-of-contact-in-slack)
   * [Thank You](#thank-you)
@@ -388,7 +388,7 @@ export default {refreshPage, reLogin};
 Once the authToken is retrieved from `window.location`, it is parsed and stored in the cookies then directly we call refreshPage to reset the `window.location` in a prehistoric javascript way which should be later adapted to `react-router`.
 Also, by calling `reLogin` it effectively refresh the page as the page sticks to `window.location.origin` if `window.location` is never touched.
 
-#### Customer Context
+#### Custom Context
 You would already notice some special code in the entry point of the application <App/> below:
 ```ts
 import React,{useState} from 'react';
