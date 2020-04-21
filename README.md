@@ -27,7 +27,7 @@ This project is designed to provide up-to-date clients-related information to th
   * [Some Tricks or Hacks](#some-tricks-or-hacks)
     + [CSS-Important](#css-important)
     + [Redirection Trap](#redirection-trap)
-    + [Customer Context](#custom-context)
+    + [Custom Context](#custom-context)
   * [Maintenance Team](#maintenance-team)
     + [Point of contact in Slack](#point-of-contact-in-slack)
   * [Thank You](#thank-you)
