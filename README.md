@@ -23,6 +23,7 @@ This project is designed to provide up-to-date clients-related information to th
     + [Array of Input Groups](#array-of-input-groups)
     + [Validation with Customized Localized Messages](#validation-with-customized-localized-messages)
     + [Adapt Customized Input Component to Formik](#adapt-customized-input-component-to-formik)
+    + [Only Touched Input Components Get Validated](#only-touched-input-components-get-validated)
   * [Auth Solution-Need to revise](#auth-solution-need-to-revise)
   * [Some Tricks or Hacks](#some-tricks-or-hacks)
     + [CSS-Important](#css-important)
@@ -361,6 +362,32 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
         </Form.Control.Feedback>
     </Form.Group>
  ```
+#### Only Touched Input Components Get Validated
+From user experience point of view, if the user has input something in one input box, however all the input boxed get validated with error message, it delivers unwanted surprise. To mitigate this issue where the framework has some predefined functions that we have to use like `arrayHelper.push` which always perform form-wide validation, we need to condition the visibility of the error message. To be clear, error message will be generated on each input box once that field is validated, however without being touched, the input box shall not show the error message. In this case, we can exploit the feature of `touched` property offered by the framework like below:
+```ts
+const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID,name,type,value,placeholderTextID,error,className,touched}) =>{
+    const context = useContext(IntlContext);
+    const { setFieldTouched,handleChange} = useFormikContext();
+    const placeholder=context.formatMessage({id:placeholderTextID});
+    return     <Form.Group className={`input-field-base ${className}`}>
+        <Form.Label className='input-field-label'><FormattedMessage id={labelTextID}/></Form.Label>
+        <Form.Control
+            className='input-field-content'
+            type={type}
+            placeholder={placeholder}
+            name={name}
+            value={value}
+            onChange={(e:any)=>{handleChange(e);setFieldTouched(name,true)}}
+            isInvalid={!!error}
+        />
+        <Form.Control.Feedback className='input-field-feedback' type="invalid">
+            { touched && error}
+        </Form.Control.Feedback>
+    </Form.Group>
+}
+```
+Notice ` { touched && error} `, error message will only be presented given `touched` is true and `touched` is set true by `setFieldTouched(name,true)` provided by the framework and elegantly positioned inside `onChange` hook.
+ 
 ### Auth Solution-Need to revise
 Currently the repo relies on Auth0 to handle the authentication and authorization which makes use of user-management APIs. These APIs are notoriously slow, probably as a hindrance for users actually calling them in order to promote their delegated user management page:https://auth0.com/blog/delegated-admin-v2/. The strategy deployed in this repo is passwordless login specified in https://auth0.com/passwordless where the user is sent an email to login upon request from the portal, and from that Auth0 login link, we are able to extract the auth token bearing the key information including the user's role, carrier,etc. We have put the auth related information in the Cookies and upon logout, we delete from the cookies.<br/>
 The reason for a second look into this solution is because of the super slow API, unneccessary cost attached to Auth0 and a separate database to hold essencial information for security concern.
@@ -410,6 +437,42 @@ export default function App(props) {
 }
 ```
 It appears that using two context providers `CustomContext.Provider` and `IntlProvider` is redundant since both of them handle the locale and language switching. The reason for this trick is simple: For libraries like `IntlProvider` may not grant us the properties or functions we desire sometimes. Such as this case, `IntlContext` does not offer a method to change the locale, therefore we have to strike out for new approach. Adding a globally scoped context which provides desired methods whenever neccessary, in this case, a way to `setLocale`, would be a suitable solution, thus for any newly lashed-out functionalities, they could safely and easily handled by the customized context. 
+
+#### Refreshing of Validation Error upon Language Switching
+Language Switching is depicted in chapter [How we can deploy a text of the selected locale](#how-we-can-deploy-a-text-of-the-selected-locale). The methodology deployed for the validation is using `yup` package like below.
+```ts
+    let yup = require('yup');
+    const schema = yup.object({
+        firstName: yup.string().required(intlContext.formatMessage({id:TEXT_ID.FIRST_NAME_IS_A_REQUIRED_FIELD})),
+        lastName: yup.string().required(intlContext.formatMessage({id:TEXT_ID.LAST_NAME_IS_A_REQUIRED_FIELD})),
+        email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
+    });
+```
+The text will be fixed in the render time. Upon language switching, the validation message is already computed by the text-id and the locale, since it is not in the presentation layer(represented by <FormattedMessage/>), it will not be re-rendered. In order to trigger re-rendering so that the new language will be shown for the validation text, we have to manually force the validation of form, which further requires us to possess the form handles outside formik component or having the function hooks of `validateForm` outside. In here, I select the latter approach like the following in `UserInputGroup.ts`:
+```ts
+export const UserInputGroup: FunctionComponent<UserInputGroupProps> = ({values,errors,deleteable,namePrefix,onDelete,touched}) =>{
+    const { validateForm} = useFormikContext();
+    const {validateFormHooks,setValidateFormHooks} = useContext(CustomContext);
+    if(!validateFormHooks.includes(validateForm))setValidateFormHooks([...validateFormHooks,validateForm]);
+    return ...
+};
+```
+By defining and filling in the context variable `validateFormHooks` with the function `validateForm` from formik context, it is guaranteed we could perform validation of forms wherever we want in the project. As the language switching is normally carried out as global operation thus the location of the component is unpredictable(maybe of uncertain relationship with the form).<br/>
+After that we could actually call the function to validate in the language switching component like below:
+```ts
+<div className='sidebar-language'>
+                <text className='sidebar-language-option' onClick={()=>{setLocale('en');formUtils.revalidateForms(validateFormHooks)}}>English</text>
+                <text className='sidebar-language-option' onClick={()=>{setLocale('es-CL');formUtils.revalidateForms(validateFormHooks)}}>Español</text>
+            </div>
+```
+The trick deployed over here is that, you could note that `setLocale('es-CL')` is followed by `formUtils.revalidateForms(validateFormHooks)}` which supposably validate the forms and generate the error message based on the correct `locale` information which has been called earlier. However react framework does not work in that way, `setLocale` will only kick in and mutate `locale` variable in the context in the next rendering cycle however at that moment, the validation is already done which still performed based on the previous locale thus we have to delay the validation of forms a little bit by doing the following in `form.ts`:
+```ts
+const revalidateForms=(validateFormHooks:(()=>{})[])=>{
+    setTimeout(()=>{validateFormHooks.forEach(submit=>submit())},50)
+};
+```
+In a nutshell, to defer the validation by 50ms, which is sufficient for the next rendering cycle to take place based on the CPU speed in the market.
+> Note to future owner: This may be considered a dirty hack, as there is some magic number coming from nowhere (50), bad dirty hacks stem from ignorance of the capacity of the language, library and framework and enforce ancient ways of doing things with the new tools. Howver good dirty hacks exploit the frontier of the language, library and framework and overcome the restrictions of their original authors' hypothesis to perform tasks beyond the imagination of the language/library/frameworks' initial intention. Which category these hacks belong to, the ball is in your court.
 
 ### Maintenance Team
 Juvo Singapore Team takes charge of the life cycle of this project. 
