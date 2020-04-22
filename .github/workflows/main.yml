@@ -1,0 +1,30 @@
+name: Build and push docker images
+on:
+  push:
+    branches:
+    - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Environment
+      run: |
+        BRANCH_NAME=${GITHUB_REF##*/}
+        BUILD_TS=$(date +"%Y.%m.%d.%H.%M.%S")
+        IMAGE_TAG="registry.juvo.mobi/${GITHUB_REPOSITORY#*/}"
+        echo "::set-env name=BUILD_TS::$BUILD_TS"
+        echo "::set-env name=IMAGE_TAG::$IMAGE_TAG"
+        echo "::set-env name=BRANCH_NAME::$BRANCH_NAME"
+    - name: Docker login
+      run: 'docker login -u="$JUVO_REGISTRY_USERNAME" -p="$JUVO_REGISTRY_PASSWORD" registry.juvo.mobi'
+      env:
+        JUVO_REGISTRY_USERNAME: ${{ secrets.JUVO_REGISTRY_USERNAME }}
+        JUVO_REGISTRY_PASSWORD: ${{ secrets.JUVO_REGISTRY_PASSWORD }}
+    - name: Build docker image
+      run: |
+        docker build . --tag $IMAGE_TAG
+    - name: Tag and push docker images
+      run: |
+        docker tag ${IMAGE_TAG}:latest ${IMAGE_TAG}:${BRANCH_NAME}.${BUILD_TS}.${GITHUB_SHA}
+        docker push ${IMAGE_TAG}:${BRANCH_NAME}.${BUILD_TS}.${GITHUB_SHA}
