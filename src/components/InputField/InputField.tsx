@@ -4,6 +4,7 @@ import { Form,Dropdown} from 'react-bootstrap';
 import dropdownIcon from '../../res/images/dropdown/ic-dropdown.svg'
 import {FormattedMessage, IntlContext} from "react-intl";
 import {useFormikContext} from "formik";
+import formUtils from "../../utils/form";
 type InputFieldProps = {
     isDropdown?:boolean,
     labelTextID:string,
@@ -68,7 +69,7 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
 
 const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID,name,type,value,placeholderTextID,error,className,touched}) =>{
     const context = useContext(IntlContext);
-    const { setFieldTouched,handleChange} = useFormikContext();
+    const { setFieldTouched,handleChange,validateForm} = useFormikContext();
     const placeholder=context.formatMessage({id:placeholderTextID});
     return     <Form.Group className={`input-field-base ${className}`}>
         <Form.Label className='input-field-label'><FormattedMessage id={labelTextID}/></Form.Label>
@@ -78,7 +79,7 @@ const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID
             placeholder={placeholder}
             name={name}
             value={value}
-            onChange={(e:any)=>{handleChange(e);setFieldTouched(name,true)}}
+            onChange={(e:any)=>{handleChange(e);setFieldTouched(name,true);formUtils.revalidateForms([validateForm]);}}
             isInvalid={!!error}
         />
         <Form.Control.Feedback className='input-field-feedback' type="invalid">
