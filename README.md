@@ -29,6 +29,7 @@ This project is designed to provide up-to-date clients-related information to th
     + [CSS-Important](#css-important)
     + [Redirection Trap](#redirection-trap)
     + [Custom Context](#custom-context)
+    + [Refreshing of Validation Error upon Language Switching](#refreshing-of-validation-error-upon-language-switching)
   * [Maintenance Team](#maintenance-team)
     + [Point of contact in Slack](#point-of-contact-in-slack)
   * [Thank You](#thank-you)
