@@ -36,7 +36,6 @@ const getOption=(options:option[],key:string)=>{
 
 export const UserInputGroup: FunctionComponent<UserInputGroupProps> = ({values,errors,deleteable,namePrefix,onDelete,touched}) =>{
     const { validateForm} = useFormikContext();
-    console.log(touched);
     const {validateFormHooks,setValidateFormHooks} = useContext(CustomContext);
     if(!validateFormHooks.includes(validateForm))setValidateFormHooks([...validateFormHooks,validateForm]);
     return <div className='user-input-group'>
