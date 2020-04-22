@@ -176,8 +176,8 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
                     <Table indexed={false} IDs={(customerInfo.histories as any[]).map(u=>u.transactionId)} headerTextIDs={[TEXT_ID.CATEGORY,TEXT_ID.PRODUCT_NAME,TEXT_ID.EXPIRATION_DATE,TEXT_ID.EXPIRATION_TIME,TEXT_ID.BALANCES]} rows={[].map(u=>convertUtils.getRowData(u,['title','datetime','pointChange','transactionId']))}/>}
             </div>
         </div>
-        <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS}/>
-        <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM}/>
+        <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_HAVE_SUCCESSFULLY_CANCELLED_THIS_LOAN}/>
+        <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.YOUR_CANCELLATION_IS_NOT_SUCCESSFUL}/>
         <InfoDialog open={isDialogOpen} loading={loading} titleTextID={TEXT_ID.CANCEL_LOAN} subtitleTextID={TEXT_ID.CANCEL_CONFIRM} confirmTextID={TEXT_ID.CONFIRM} cancelTextID={TEXT_ID.CANCEL} handleClose={()=>{setDialogOpen(false)}} handleConfirm={onCancel}/>
     </div>
 }
