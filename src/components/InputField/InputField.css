@@ -21,6 +21,18 @@
     text-align: left;
     box-sizing:border-box;
 }
+.input-field-content-error{
+    border-radius: 4px;
+    border: solid 2px #d0021b !important;
+    width: 292px;
+    height: 47px;
+    font-size: 16px;
+    color: #282e34;
+    padding-left:12px;
+    text-align: left;
+    box-sizing:border-box;
+    outline-color: #d0021b;
+}
 .input-field-feedback{
     font-size: 12px;
     font-weight: 500;

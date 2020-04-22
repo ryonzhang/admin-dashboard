@@ -47,7 +47,7 @@ const DropdownInputField:FunctionComponent<DropdownInputFieldProps> = ({value,la
     return <Form.Group className={`input-field-dropdown ${className}`}>
         <Form.Label className='input-field-label'><FormattedMessage id={labelTextID}/></Form.Label>
         <Dropdown onSelect={ (eventKey:string,e:React.SyntheticEvent<unknown>) => {setFieldValue(name,eventKey);setFieldTouched(name,true)}}>
-            <Dropdown.Toggle id={'dropdown'} className='input-field-content'>
+            <Dropdown.Toggle id={'dropdown'} className={touched && error?'input-field-content-error':'input-field-content'}>
                 {value || <FormattedMessage id={placeholderTextID}/>}
                 <img className='input-field-dropdown-icon' src={dropdownIcon}/>
             </Dropdown.Toggle>
@@ -74,7 +74,7 @@ const BaseInputFieldProps:FunctionComponent<BaseInputFieldProps> = ({labelTextID
     return     <Form.Group className={`input-field-base ${className}`}>
         <Form.Label className='input-field-label'><FormattedMessage id={labelTextID}/></Form.Label>
         <Form.Control
-            className='input-field-content'
+            className={touched && error?'input-field-content-error':'input-field-content'}
             type={type}
             placeholder={placeholder}
             name={name}
