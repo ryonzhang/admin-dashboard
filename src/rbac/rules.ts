@@ -2,7 +2,8 @@ const rules = {
     juvo: {
         static: [
             'view:user-management',
-            'view:customer-support'
+            'view:customer-support',
+            'assign:juvo-role'
         ],
     },
     admin: {

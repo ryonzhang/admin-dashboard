@@ -35,6 +35,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
     const [operation,setOperation]=useState(OPERATION.EDIT);
     const intlContext =useContext(IntlContext);
     const onRemove=async ()=>{
+        console.log(authUtils.getUser());
         setLoadingForRemoval(true);
         setOperation(OPERATION.DELETE);
         await networkUtils
