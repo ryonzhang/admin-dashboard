@@ -79,7 +79,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                             placeholder="your-email@your-domain.com"
                                             name="email"
                                             value={values.email}
-                                            onChange={(e:any)=>{handleChange(e);setFieldTouched('email',true)}}
+                                            onChange={(e:any)=>{handleChange(e);setFieldTouched('email',true);formUtils.revalidateLogin(validateForm)}}
                                             isInvalid={!!errors.email}
                                         />
 
