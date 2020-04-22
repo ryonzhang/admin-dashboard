@@ -121,6 +121,6 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                     </Formik>
                 </div>
                 <InfoDialog open={isDialogOpen} loading={loadingForRemoval} titleTextID={TEXT_ID.CONFIRM_REMOVE_USER} subtitleTextID={TEXT_ID.THIS_ACTION_IS_PERMANENT_AND_NOT_REVERSIBLE} confirmTextID={TEXT_ID.CONFIRM} cancelTextID={TEXT_ID.CANCEL} handleClose={()=>{setDialogOpen(false)}} handleConfirm={onRemove}/>
-                <InfoModal open={isModalOpen} icon={successIcon} titleTextID={operation===OPERATION.EDIT?TEXT_ID.YOU_VE_SUCCESSFULLY_SAVED_USER:TEXT_ID.YOU_VE_SUCCESSFULLY_DELETED_USER}/>
+                <InfoModal open={isModalOpen} icon={successIcon} titleTextID={operation===OPERATION.EDIT?TEXT_ID.YOU_VE_SUCCESSFULLY_SAVED_USER:TEXT_ID.THE_USER_WAS_DELETED}/>
             </div>
 }

@@ -102,5 +102,6 @@
   "TEXT_ID_DEPARTMENT_IS_A_REQUIRED_FIELD":"Departamento es un campo obligatorio",
   "TEXT_ID_EMAIL_MUST_BE_A_VALID_EMAIL":"Email debe ser un email valido",
   "TEXT_ID_MSISDN_IS_A_REQUIRED_FIELD":"MSISDN es un campo obligatorio",
-  "TEXT_ID_THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM":"Los usuarios que pretendía agregar ya existen en el sistema"
+  "TEXT_ID_THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM":"Los usuarios que pretendía agregar ya existen en el sistema",
+  "TEXT_ID_THE_USER_WAS_DELETED":"El usuario ha sido eliminado",
 }
