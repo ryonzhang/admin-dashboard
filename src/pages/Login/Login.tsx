@@ -1,7 +1,7 @@
 import React, {FunctionComponent, useContext, useState} from "react";
 import './Login.css'
 import signInIcon from '../../res/images/illustration-sign-in.svg'
-import {Formik} from "formik";
+import {Formik, useFormik} from "formik";
 import {Form} from "react-bootstrap";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import requestSuccessIcon from '../../res/images/ic-landing-success.svg'
@@ -11,6 +11,7 @@ import {CustomContext} from "../../contexts/custom-context";
 import {AxiosResponse} from "axios";
 import networkUtils from '../../utils/network';
 import {CircularProgress} from "@material-ui/core";
+import formUtils from "../../utils/form";
 
 type LoginProps = {
 }
@@ -44,7 +45,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
         email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
     });
     return <CustomContext.Consumer>
-        {({setLocale})=>
+        {({setLocale,validateFormHooks,setValidateFormHooks})=>
             <div className='login' onClick={()=>setModalOpen(false)}>
                 <div className='login-container'>
                     <div className='login-request-email'>
@@ -66,6 +67,8 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                   touched,
                                   isValid,
                                   errors,
+                                  validateForm,
+                                  setFieldTouched,
                               }) => (
                                 <Form noValidate onSubmit={handleSubmit} className='login-form'>
                                     <Form.Group className='login-form-input'>
@@ -76,12 +79,12 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                             placeholder="your-email@your-domain.com"
                                             name="email"
                                             value={values.email}
-                                            onChange={handleChange}
+                                            onChange={(e:any)=>{handleChange(e);setFieldTouched('email',true)}}
                                             isInvalid={!!errors.email}
                                         />
 
                                         <Form.Control.Feedback className='login-form-input-feedback' type="invalid">
-                                            {errors.email}
+                                            {touched.email && errors.email}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <button className={(isValid && !loading)?'login-submit-btn':'login-submit-btn-disabled'} disabled={!isValid} type='submit' onClick={()=>requestToken(values.email)}>
@@ -89,13 +92,13 @@ export const Login: FunctionComponent<LoginProps> = () =>{
 
                                     </button>
                                     {loading && <CircularProgress className='login-submit-loading' size={24}  />}
+                                    <div className='login-language'>
+                                        <text className='login-language-option' onClick={()=>{setLocale('en');formUtils.revalidateLogin(validateForm);}}>English</text>
+                                        <text className='login-language-option' onClick={()=>{setLocale('es-CL');formUtils.revalidateLogin(validateForm);}}>Español</text>
+                                    </div>
                                 </Form>
                             )}
                         </Formik>
-                        <div className='login-language'>
-                            <text className='login-language-option' onClick={()=>setLocale('en')}>English</text>
-                            <text className='login-language-option' onClick={()=>setLocale('es-CL')}>Español</text>
-                        </div>
                     </div>
                     <div className='login-email-image'>
                         <img className='login-request-icon' src={signInIcon} />

@@ -17,6 +17,7 @@ import {InfoModal} from "../../components/InfoModal/InfoModal";
 import authUtils from "../../utils/auth";
 
 
+
 type InviteUsersProps = {
     onSetActivePage: Function,
     setRefreshTimestamp:Function,
@@ -118,7 +119,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                                     <div>
                                         {values.users.map((user, index) => (
                                             <div key={index}>
-                                                <UserInputGroup namePrefix={`users[${index}]`} values={user} errors={(errors.users||[])[index]} handleChange={handleChange} setFieldValues={setFieldValue} deleteable={values.users.length>1} onDelete={()=>{arrayHelpers.remove(index)}}/>
+                                                <UserInputGroup namePrefix={`users[${index}]`} values={user} errors={(errors.users||[])[index]} touched={(touched.users||[])[index]} deleteable={values.users.length>1} onDelete={()=>{arrayHelpers.remove(index)}}/>
                                             </div>
                                         ))}
                                         <div className='invite-users-add-more' onClick={() => {arrayHelpers.push({firstName:'',lastName:'',email:'',department:'' });}}>

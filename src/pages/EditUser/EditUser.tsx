@@ -97,17 +97,13 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                     >
                         {({
                               handleSubmit,
-                              handleChange,
-                              handleBlur,
                               values,
-                              setFieldValue,
                               touched,
-                              isValid,
                               errors,
                           }) => (
 
                             <Form noValidate onSubmit={handleSubmit}>
-                                <div className='edit-user-panel'>
+                                <div className='edit-user-panel' onClick={()=>{}}>
                                     <div className='edit-user-panel-title'>
                                         <text className='edit-user-panel-title-text'><b><FormattedMessage id={TEXT_ID.EDIT_USER}/></b></text>
                                         <button className='edit-user-remove-btn' type={'button'} onClick={()=>{setDialogOpen(true);}}>
@@ -118,7 +114,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                                         </button>
                                         {loading && <CircularProgress className='edit-user-submit-loading' size={24}  />}
                                     </div>
-                                    <UserInputGroup handleChange={handleChange} values={values} errors={errors} setFieldValues={setFieldValue} deleteable={false}/>
+                                    <UserInputGroup values={values} errors={errors} touched={touched} deleteable={false}/>
                                 </div>
                             </Form>
                         )}
