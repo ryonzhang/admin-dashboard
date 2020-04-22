@@ -69,6 +69,7 @@
 .invite-users-add-more{
     padding-left:29px;
     padding-top:24px;
+    max-width: 200px;
 }
 .invite-users-add-more-icon{
     width: 20px;

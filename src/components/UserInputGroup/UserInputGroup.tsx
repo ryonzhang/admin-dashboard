@@ -55,4 +55,4 @@ export const UserInputGroup: FunctionComponent<UserInputGroupProps> = ({values,e
         />
         {deleteable && <img className='user-group-close-icon' src={closeIcon} onClick={onDelete}/>}
     </div>
-}
+};

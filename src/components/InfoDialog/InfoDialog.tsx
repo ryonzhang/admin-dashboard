@@ -28,11 +28,13 @@ export const InfoDialog: FunctionComponent<InfoDialogProps> = ({open,titleTextID
         open={open}
         onClose={handleClose}
     >
-        <DialogTitle ><FormattedMessage id={titleTextID}/></DialogTitle>
+        <DialogTitle >
+            <FormattedMessage id={titleTextID}/>
+            {loading && <CircularProgress size={24} className='info-dialog-loading' />}
+        </DialogTitle>
         <DialogContent>
             <DialogContentText>
                 <FormattedMessage id={subtitleTextID}/>
-                {loading && <CircularProgress size={24} className='info-dialog-loading' />}
             </DialogContentText>
         </DialogContent>
         <DialogActions>

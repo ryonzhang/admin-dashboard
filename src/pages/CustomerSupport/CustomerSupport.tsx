@@ -19,6 +19,11 @@ import {CustomContext} from "../../contexts/custom-context";
 import convertUtils from '../../utils/converter';
 import {CircularProgress} from "@material-ui/core";
 import authUtils from "../../utils/auth";
+import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
+import {InfoDialog} from "../../components/InfoDialog/InfoDialog";
+import {InfoModal} from "../../components/InfoModal/InfoModal";
+import successIcon from "../../res/images/illustration-success.svg";
+import errorIcon from "../../res/images/illustration-error.svg";
 
 const camelcaseKeys = require('camelcase-keys');
 
@@ -76,11 +81,47 @@ const starLevelIconMap:any={
     diamond: starLevelDiamond,
     gold: starLevelGold,
     silver: starLevelSilver,
-}
+};
 
 const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({customerInfo}) =>{
     const [activeTab,setActiveTab]=useState(CUSTOMER_SUPPORT_TABS.BALANCES);
-    return <div>
+    const [isDialogOpen,setDialogOpen]=useState(false);
+    const [loading,setLoading]=useState(false);
+    const [isSuccessModalOpen,setSuccessModalOpen]=useState(false);
+    const [isErrorModalOpen,setErrorModalOpen]=useState(false);
+    const closeModals = ()=>{
+        setSuccessModalOpen(false);
+        setErrorModalOpen(false);
+    };
+    const onCancel=async ()=>{
+        console.log(authUtils.getUser());
+        setLoading(true);
+        return await networkUtils
+            .makeAPICall(
+                {
+                    method: 'POST',
+                    targetBackend: 'juvoAdminApis',
+                    url: `/customers/${customerInfo.msisdn}/loans/terminate`,
+                },
+                authUtils.getCarrier(),
+            )
+            .then((response) => {
+                console.log('CORRECT'+response);
+                // @ts-ignore
+                if (300 > response.status >= 200) {
+                    return 0;
+                }
+                setSuccessModalOpen(true);
+                setDialogOpen(false);
+                setLoading(false);
+            })
+            .catch((error) => {
+                setErrorModalOpen(true);
+                setDialogOpen(false);
+                setLoading(false);
+            });
+    };
+    return <div onClick={closeModals}>
         <div className='customer-support-panel'>
             <div className='customer-support-panel-title'>
                 <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_ID}/></b></text>
@@ -109,6 +150,9 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
             <div className='customer-support-panel-balance customer-support-panel'>
                 <div className='customer-support-panel-title'>
                     <text className='customer-support-panel-title-text'><b><FormattedMessage id={TEXT_ID.BALANCE_INFORMATION}/></b></text>
+                    <button className='customer-support-cancel-loan-btn' onClick={()=>{setDialogOpen(true)}}>
+                        <FormattedMessage id={TEXT_ID.CANCEL_LOAN}/>
+                    </button>
                 </div>
                 <div className='customer-support-panel-container-balance'>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance customer-support-panel-right-bar'>
@@ -132,6 +176,9 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
                     <Table indexed={false} IDs={(customerInfo.histories as any[]).map(u=>u.transactionId)} headerTextIDs={[TEXT_ID.CATEGORY,TEXT_ID.PRODUCT_NAME,TEXT_ID.EXPIRATION_DATE,TEXT_ID.EXPIRATION_TIME,TEXT_ID.BALANCES]} rows={[].map(u=>convertUtils.getRowData(u,['title','datetime','pointChange','transactionId']))}/>}
             </div>
         </div>
+        <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS}/>
+        <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM}/>
+        <InfoDialog open={isDialogOpen} loading={loading} titleTextID={TEXT_ID.CANCEL_LOAN} subtitleTextID={TEXT_ID.CANCEL_CONFIRM} confirmTextID={TEXT_ID.CONFIRM} cancelTextID={TEXT_ID.CANCEL} handleClose={()=>{setDialogOpen(false)}} handleConfirm={onCancel}/>
     </div>
 }
 
@@ -156,7 +203,6 @@ enum CUSTOMER_SUPPORT_STATUS {
 }
 
 export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({className}) => {
-    const customContext = useContext(CustomContext);
     const [customerInfo,setCustomerInfo]= useState({});
     const [customerSupportStatus,setCustomerSupportStatus] = useState(CUSTOMER_SUPPORT_STATUS.INIT);
     const [loading,setLoading]=useState(false);

@@ -52,6 +52,18 @@
     left:466px;
     top:47px;
 }
+.customer-support-cancel-loan-btn{
+    width: 120px;
+    height: 36px;
+    border-radius: 5px;
+    border: solid 1px #397cca;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    text-align: center;
+    color: #397cca;
+    text-transform: uppercase;
+}
 .customer-support-submit-btn-loading{
     width: 120px;
     height: 36px;
