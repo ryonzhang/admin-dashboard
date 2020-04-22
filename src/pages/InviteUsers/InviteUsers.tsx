@@ -11,8 +11,8 @@ import {Form} from "react-bootstrap";
 import {CircularProgress} from "@material-ui/core";
 import {UserInputGroup} from "../../components/UserInputGroup/UserInputGroup";
 import {FieldArray, Formik} from "formik";
-import {CustomContext} from "../../contexts/custom-context";
 import successIcon from "../../res/images/illustration-success.svg";
+import errorIcon from "../../res/images/illustration-error.svg";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import authUtils from "../../utils/auth";
 
@@ -30,8 +30,13 @@ let yup = require('yup');
 
 export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePage,className,setRefreshTimestamp}) => {
     const [loading,setLoading]=useState(false);
-    const [isModalOpen,setModalOpen]=useState(false);
+    const [isSuccessModalOpen,setSuccessModalOpen]=useState(false);
+    const [isErrorModalOpen,setErrorModalOpen]=useState(false);
     const intlContext =useContext(IntlContext);
+    const closeAllModals=()=>{
+        if(isSuccessModalOpen)setSuccessModalOpen(false);
+        if(isErrorModalOpen)setErrorModalOpen(false);
+    };
     const schema = yup.object().shape({
         users: yup.array()
             .of(
@@ -44,7 +49,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
             )
             .required('Must have users')
     });
-    return <div className={`invite-users ${className}`} onClick={()=>{if(isModalOpen){setModalOpen(false);onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}}>
+    return <div className={`invite-users ${className}`} onClick={()=>{closeAllModals();if(isSuccessModalOpen)onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}>
         <div className='invite-users-title' onClick={() => {
             onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)
         }}>
@@ -59,6 +64,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                 onSubmit={async(values: any) => {
                     console.log(values);
                     setLoading(true);
+                    let hasErrorOccurred = false;
                     await axios
                         .all(values.users.map((user:any)=>{return networkUtils
                             .makeAPICall({
@@ -71,16 +77,18 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                             )
                             .catch((error:any) => {
                                 console.log('createUser error', error);
-                            })}))
+                                hasErrorOccurred = true;
+                                setErrorModalOpen(true);
+                            })
+                        }))
                         .then((res:any[]) => {
-                            console.log('res', res);
+                            if(!hasErrorOccurred)setSuccessModalOpen(true);
                             return res;
                         })
                         .catch((e:any) => {
                             return e.response;
                         });
                     setLoading(false);
-                    setModalOpen(true);
                     setRefreshTimestamp(new Date());
                 }
                 }>
@@ -125,6 +133,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                 )}
             </Formik>
         </div>
-        <InfoModal open={isModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS}/>
+        <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS}/>
+        <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM}/>
     </div>
 }

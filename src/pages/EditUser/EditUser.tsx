@@ -22,15 +22,21 @@ type EditUserProps = {
     className?:string,
 }
 
+enum OPERATION{
+    EDIT,
+    DELETE,
+}
 
 export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,userToEdit,className,setRefreshTimestamp}) =>{
     const [isModalOpen,setModalOpen]=useState(false);
     const [isDialogOpen,setDialogOpen]=useState(false);
     const [loading,setLoading]=useState(false);
     const [loadingForRemoval,setLoadingForRemoval]=useState(false);
+    const [operation,setOperation]=useState(OPERATION.EDIT);
     const intlContext =useContext(IntlContext);
     const onRemove=async ()=>{
         setLoadingForRemoval(true);
+        setOperation(OPERATION.DELETE);
         await networkUtils
             .makeAPICall(
                 {
@@ -44,7 +50,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                 console.log('deleteUser error', error);
             });
         setRefreshTimestamp(new Date());
-        onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);
+        setModalOpen(true);
     };
 
     // validation texts
@@ -55,7 +61,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
         email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
     });
 
-    return <div className={`edit-user ${className}`} onClick={()=>setModalOpen(false)}>
+    return <div className={`edit-user ${className}`} onClick={()=>{if(isModalOpen){setModalOpen(false);onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}}>
             <div className='edit-user-title' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)}}>
                 <img className='edit-user-icon' src={backIcon}/>
                 <text className='edit-user-title-text'><b><FormattedMessage id={TEXT_ID.RETURN_TO_USER_MANAGEMENT}/></b></text>
@@ -65,6 +71,7 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                         validationSchema={schema}
                         onSubmit={async (values)=>{
                             setLoading(true);
+                            setOperation(OPERATION.EDIT);
                             await networkUtils
                                 .makeAPICall(
                                     {
@@ -117,6 +124,6 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                     </Formik>
                 </div>
                 <InfoDialog open={isDialogOpen} loading={loadingForRemoval} titleTextID={TEXT_ID.CONFIRM_REMOVE_USER} subtitleTextID={TEXT_ID.THIS_ACTION_IS_PERMANENT_AND_NOT_REVERSIBLE} confirmTextID={TEXT_ID.CONFIRM} cancelTextID={TEXT_ID.CANCEL} handleClose={()=>{setDialogOpen(false)}} handleConfirm={onRemove}/>
-                <InfoModal open={isModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_SAVED_USER}/>
+                <InfoModal open={isModalOpen} icon={successIcon} titleTextID={operation===OPERATION.EDIT?TEXT_ID.YOU_VE_SUCCESSFULLY_SAVED_USER:TEXT_ID.YOU_VE_SUCCESSFULLY_DELETED_USER}/>
             </div>
 }

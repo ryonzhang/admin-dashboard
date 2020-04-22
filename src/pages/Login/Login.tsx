@@ -17,9 +17,6 @@ type LoginProps = {
 let yup = require('yup');
 
 
-
-
-
 export const Login: FunctionComponent<LoginProps> = () =>{
     const [isModalOpen,setModalOpen]=useState(false);
     const [loading,setLoading]=useState(false);

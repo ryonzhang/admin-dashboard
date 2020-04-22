@@ -56,6 +56,7 @@
   "TEXT_ID_YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS":"You’ve successfully invited new users!",
   "TEXT_ID_YOU_VE_SUCCESSFULLY_INVITED_NEW_USER":"You’ve successfully invited new user!",
   "TEXT_ID_YOU_VE_SUCCESSFULLY_SAVED_USER":"You’ve successfully saved this user!",
+  "TEXT_ID_YOU_VE_SUCCESSFULLY_DELETED_USER":"You’ve successfully deleted this user!",
   "TEXT_ID_INVITING_NEW_USERS_UNSUCCESSFUL":"Inviting new user(s) unsuccessful",
   "TEXT_ID_CUSTOMER_LOOKUP":"Customer Lookup",
   "TEXT_ID_SEARCH_CUSTOMER":"Search Customer",
@@ -101,5 +102,6 @@
   "TEXT_ID_EMAIL_IS_A_REQUIRED_FIELD":"Email is a required field",
   "TEXT_ID_DEPARTMENT_IS_A_REQUIRED_FIELD":"Department is a required field",
   "TEXT_ID_EMAIL_MUST_BE_A_VALID_EMAIL":"Email must be a valid email",
-  "TEXT_ID_MSISDN_IS_A_REQUIRED_FIELD":"MSISDN is a required field"
+  "TEXT_ID_MSISDN_IS_A_REQUIRED_FIELD":"MSISDN is a required field",
+  "TEXT_ID_THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM":"The user(s) you intended to add already exist in the system"
 }
