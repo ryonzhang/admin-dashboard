@@ -33,6 +33,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
     const [loading,setLoading]=useState(false);
     const [isSuccessModalOpen,setSuccessModalOpen]=useState(false);
     const [isErrorModalOpen,setErrorModalOpen]=useState(false);
+    const [usersString,setUsersString]=useState([] as string[]);
     const intlContext =useContext(IntlContext);
     const closeAllModals=()=>{
         if(isSuccessModalOpen)setSuccessModalOpen(false);
@@ -63,9 +64,9 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                 validationSchema={schema}
                 initialValues={{ users: [{firstName:'',lastName:'',email:'',department:'' }]}}
                 onSubmit={async(values: any) => {
-                    console.log(values);
                     setLoading(true);
                     let hasErrorOccurred = false;
+                    let usersWithError: string[] = [];
                     await axios
                         .all(values.users.map((user:any)=>{return networkUtils
                             .makeAPICall({
@@ -79,16 +80,21 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                             .catch((error:any) => {
                                 console.log('createUser error', error);
                                 hasErrorOccurred = true;
+                                usersWithError.push(user.email);
                                 setErrorModalOpen(true);
                             })
                         }))
                         .then((res:any[]) => {
-                            if(!hasErrorOccurred)setSuccessModalOpen(true);
+                            if(!usersWithError.length)setSuccessModalOpen(true);
                             return res;
                         })
                         .catch((e:any) => {
                             return e.response;
                         });
+                    if(usersWithError.length){
+                        setUsersString(usersWithError);
+                        setErrorModalOpen(true);
+                    }
                     setLoading(false);
                     setRefreshTimestamp(new Date());
                 }
@@ -134,7 +140,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                 )}
             </Formik>
         </div>
-        <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS}/>
-        <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM}/>
+        <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS} />
+        <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM} values={usersString}/>
     </div>
 }

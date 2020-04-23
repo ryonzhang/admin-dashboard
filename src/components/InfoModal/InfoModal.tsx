@@ -8,9 +8,10 @@ type ModalProps = {
     icon:string,
     titleTextID:string,
     subtitleTextID?:string,
+    values?:string[],
 }
 
-export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,titleTextID,subtitleTextID}) =>
+export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,titleTextID,subtitleTextID,values}) =>
     <Modal
         className='info-modal'
         open={open}
@@ -24,6 +25,7 @@ export const InfoModal: FunctionComponent<ModalProps> = ({open,icon,titleTextID,
                 <img className='info-modal-icon' src={icon}/>
                 <text className='info-modal-title'><FormattedMessage id={titleTextID}/></text>
                 {subtitleTextID && <text className='info-modal-subtitle'><FormattedMessage id={subtitleTextID}/></text>}
+                {values && values.map(value=><text className='info-modal-additional-subtitle'>{value}</text>)}
             </div>
         </Fade>
     </Modal>

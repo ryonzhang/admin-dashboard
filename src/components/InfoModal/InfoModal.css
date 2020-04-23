@@ -36,3 +36,10 @@
     color: #43536a;
     align-self: center;
 }
+.info-modal-additional-subtitle{
+    position:relative;
+    top:40px;
+    font-size: 18px;
+    font-weight: bold;
+    color: darkred;
+}
