@@ -12,7 +12,7 @@ import starLevelDiamond from '../../res/images/start-level/star-level-diamond.sv
 import starLevelGold from '../../res/images/start-level/star-level-gold.svg'
 import starLevelSilver from '../../res/images/start-level/star-level-silver.svg'
 import {Formik} from "formik";
-import {FormattedMessage } from "react-intl";
+import {FormattedMessage, IntlContext} from "react-intl";
 import {TEXT_ID} from '../../res/languages/lang';
 import networkUtils from "../../utils/network";
 import {CustomContext} from "../../contexts/custom-context";
@@ -24,6 +24,7 @@ import {InfoDialog} from "../../components/InfoDialog/InfoDialog";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import successIcon from "../../res/images/illustration-success.svg";
 import errorIcon from "../../res/images/illustration-error.svg";
+import formUtils from "../../utils/form";
 
 const camelcaseKeys = require('camelcase-keys');
 
@@ -39,14 +40,8 @@ type NoResultProps = {
     className?:string
 }
 type ToSearchProps = {
-    className?:string
+    className?: string
 }
-
-let yup = require('yup');
-
-const schema = yup.object({
-    msisdn: yup.number().required(),
-});
 
 type history = {
     type: string,
@@ -251,6 +246,12 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                 setLoading(false);
             });
     };
+    const intlContext =useContext(IntlContext);
+    let yup = require('yup');
+    const schema = yup.object({
+        msisdn: yup.number().typeError(intlContext.formatMessage({id:TEXT_ID.MSISDN_MUST_BE_A_NUMBER_TYPE})).required(intlContext.formatMessage({id:TEXT_ID.MSISDN_IS_A_REQUIRED_FIELD})),
+    });
+    const {validateFormHooks,setValidateFormHooks} = useContext(CustomContext);
     return <div className={`customer-support ${className}`}>
         <div className='customer-support-title'>
             <text className='customer-support-title-text'><b><FormattedMessage id={TEXT_ID.CUSTOMER_SUPPORT}/></b>
@@ -279,6 +280,8 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                                   touched,
                                   isValid,
                                   errors,
+                                  setFieldTouched,
+                                  validateForm,
                               }) => (
                                 <Form noValidate onSubmit={handleSubmit} className='customer-support-form'>
                                     <Form.Group className='customer-support-form-input'>
@@ -286,18 +289,16 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                                             id={TEXT_ID.CUSTOMER_MSISDN_OR_UUID}/></Form.Label>
                                         <Form.Control
                                             className='customer-support-form-input-content'
-                                            type="text"
                                             placeholder="209847502"
                                             name="msisdn"
-                                            //@ts-ignore
                                             value={values.msisdn}
-                                            onChange={handleChange}
+                                            onChange={(e:any)=>{handleChange(e);if(!validateFormHooks.includes(validateForm))setValidateFormHooks([...validateFormHooks,validateForm]);setFieldTouched('msisdn',true);formUtils.revalidateLogin(validateForm)}}
                                             isInvalid={!!errors.msisdn}
                                         />
 
                                         <Form.Control.Feedback className='customer-support-form-input-feedback'
                                                                type="invalid">
-                                            {errors.msisdn}
+                                            {touched.msisdn && errors.msisdn}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <button className={`${loading?'customer-support-submit-btn-loading':'customer-support-submit-btn'}`} type='submit'>

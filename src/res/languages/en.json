@@ -106,5 +106,6 @@
   "TEXT_ID_THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM":"The user(s) you intended to add already exist in the system",
   "TEXT_ID_THE_USER_WAS_DELETED":"The user was deleted",
   "TEXT_ID_YOU_HAVE_SUCCESSFULLY_CANCELLED_THIS_LOAN":"You have successfully cancelled this loan",
-  "TEXT_ID_YOUR_CANCELLATION_IS_NOT_SUCCESSFUL":"Your cancellation is not successful"
+  "TEXT_ID_YOUR_CANCELLATION_IS_NOT_SUCCESSFUL":"Your cancellation is not successful",
+  "TEXT_ID_MSISDN_MUST_BE_A_NUMBER_TYPE":"msisdn must be a 'number' type"
 }

@@ -15,7 +15,7 @@ import formUtils from "../../utils/form";
 
 type LoginProps = {
 }
-let yup = require('yup');
+
 
 
 export const Login: FunctionComponent<LoginProps> = () =>{
@@ -41,6 +41,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
             });
     };
     const intlContext =useContext(IntlContext);
+    let yup = require('yup');
     const schema = yup.object({
         email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
     });

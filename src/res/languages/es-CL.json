@@ -105,5 +105,6 @@
   "TEXT_ID_THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM":"Los usuarios que pretendía agregar ya existen en el sistema",
   "TEXT_ID_THE_USER_WAS_DELETED":"El usuario ha sido eliminado",
   "TEXT_ID_YOU_HAVE_SUCCESSFULLY_CANCELLED_THIS_LOAN":"El préstamo ha sido cancelado con éxito",
-  "TEXT_ID_YOUR_CANCELLATION_IS_NOT_SUCCESSFUL": "La cancelación no fue éxitosa"
+  "TEXT_ID_YOUR_CANCELLATION_IS_NOT_SUCCESSFUL": "La cancelación no fue éxitosa",
+  "TEXT_ID_MSISDN_MUST_BE_A_NUMBER_TYPE":"msisdn debe ser un tipo 'número'"
 }
