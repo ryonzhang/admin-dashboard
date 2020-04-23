@@ -54,7 +54,6 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
         setRefreshTimestamp(new Date());
         setModalOpen(true);
     };
-
     // validation texts
     let yup = require('yup');
     const schema = yup.object({
@@ -111,8 +110,8 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                                             role={authUtils.getRole()}
                                             perform="delete:users"
                                             data={{
-                                                userId: userToEdit && userToEdit.email,
-                                                selfId: authUtils.getUsername(),
+                                                userId: userToEdit && userToEdit.userId,
+                                                selfId: authUtils.getUserId(),
                                             }}
                                             yes={() => (
                                                 <button className='edit-user-remove-btn' type={'button'} onClick={()=>{setDialogOpen(true);}}>
