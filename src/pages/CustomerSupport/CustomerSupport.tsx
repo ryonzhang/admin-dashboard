@@ -208,6 +208,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
     };
     const onSearch=async (msisdn:string)=>{
         setLoading(true);
+        let hasErrorOccurred = false;
         const tasks = [
             await networkUtils.makeAPICall(
                 {
@@ -215,7 +216,11 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                     url: `/customers/${msisdn}`,
                 },
                 authUtils.getCarrier(),context.locale
-            ).catch(err=>{console.log(err);setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.NO_RESULT);setLoading(false);}),
+            ).catch(err=>{
+                hasErrorOccurred = true;
+                setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.NO_RESULT);
+                setLoading(false);
+            }),
             await networkUtils.makeAPICall(
                 {
                     targetBackend: 'juvoAdminApis',
@@ -237,12 +242,14 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
         ];
         Promise.all(tasks)
             .then(([customerDataResponse, historyResponse, repaymentStatusResponse]:any[])=>{
-                const {balances,account} = camelcaseKeys(customerDataResponse.data,{deep: true});
-                const histories = camelcaseKeys(historyResponse.data,{deep: true});
-                (histories as history[]).forEach(history=>history.datetime=convertUtils.dateTimeFormatter(history.datetime));
-                const {status} = camelcaseKeys(repaymentStatusResponse.data,{deep: true});
-                assignCustomInfoProps({msisdn,airtimeBalance:balances[0].amount,loanBalance:balances[1].amount,level:account.level,points:account.points,histories,repaidStatus:status});
-                setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);
+                if(!hasErrorOccurred){
+                    const {balances,account} = camelcaseKeys(customerDataResponse.data,{deep: true});
+                    const histories = camelcaseKeys(historyResponse.data,{deep: true});
+                    (histories as history[]).forEach(history=>history.datetime=convertUtils.dateTimeFormatter(history.datetime));
+                    const {status} = camelcaseKeys(repaymentStatusResponse.data,{deep: true});
+                    assignCustomInfoProps({msisdn,airtimeBalance:balances[0].amount,loanBalance:balances[1].amount,level:account.level,points:account.points,histories,repaidStatus:status});
+                    setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);
+                }
                 setLoading(false);
             });
     };
