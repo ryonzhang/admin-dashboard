@@ -84,7 +84,7 @@ const starLevelIconMap:any={
 };
 
 const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({customerInfo}) =>{
-    const [activeTab,setActiveTab]=useState(CUSTOMER_SUPPORT_TABS.BALANCES);
+    const [activeTab,setActiveTab]=useState(CUSTOMER_SUPPORT_TABS.HISTORY);
     const [isDialogOpen,setDialogOpen]=useState(false);
     const [loading,setLoading]=useState(false);
     const [isSuccessModalOpen,setSuccessModalOpen]=useState(false);
@@ -169,7 +169,7 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
         <div className='customer-support-table-content'>
             <div className='customer-support-table-panel'>
                 <Tab>
-                    <TabItem textID={TEXT_ID.BALANCES} selected={activeTab===CUSTOMER_SUPPORT_TABS.BALANCES} onClick={()=>setActiveTab(CUSTOMER_SUPPORT_TABS.BALANCES)} />
+                    {false && <TabItem textID={TEXT_ID.BALANCES} selected={activeTab===CUSTOMER_SUPPORT_TABS.BALANCES} onClick={()=>setActiveTab(CUSTOMER_SUPPORT_TABS.BALANCES)} />}
                     <TabItem textID={TEXT_ID.HISTORY} selected={activeTab===CUSTOMER_SUPPORT_TABS.HISTORY} onClick={()=>setActiveTab(CUSTOMER_SUPPORT_TABS.HISTORY)}/>
                 </Tab>
                 {activeTab===CUSTOMER_SUPPORT_TABS.HISTORY?<Table IDs={(customerInfo.histories as any[]).map(u=>u.transactionId)} indexed={false}  headerTextIDs={[TEXT_ID.ACTIVITY,TEXT_ID.DATE,TEXT_ID.POINTS,TEXT_ID.ID]} rows={(customerInfo.histories as []).map(h=>convertUtils.getRowData(h,['title','datetime','pointChange','transactionId']))}/>:
