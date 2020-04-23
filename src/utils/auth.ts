@@ -10,11 +10,16 @@ const getUser=()=>{
 
 const getCarrier=()=>{
     return (getUser() as any)['carrier'];
-}
+};
 
 const getRole=()=>{
     return (getUser() as any)['primaryRole'];
-}
+};
+
+const getUsername=()=>{
+    return (getUser() as any)['username'];
+};
+
 
 /**
  * TODO:This is a direct copy from the old repository for the compatibility of quasi-backend service , should be refactored once the backend is restructured
@@ -43,4 +48,5 @@ export default {
     getUser,
     getCarrier,
     getRole,
+    getUsername,
 };

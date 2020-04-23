@@ -14,6 +14,7 @@ import networkUtils from "../../utils/network";
 import {InfoModal} from "../../components/InfoModal/InfoModal";
 import {InfoDialog} from "../../components/InfoDialog/InfoDialog"
 import authUtils from "../../utils/auth";
+import Can from "../../rbac/Can";
 
 type EditUserProps = {
     onSetActivePage: Function,
@@ -106,9 +107,19 @@ export const EditUser: FunctionComponent<EditUserProps> = ({onSetActivePage,user
                                 <div className='edit-user-panel' onClick={()=>{}}>
                                     <div className='edit-user-panel-title'>
                                         <text className='edit-user-panel-title-text'><b><FormattedMessage id={TEXT_ID.EDIT_USER}/></b></text>
-                                        <button className='edit-user-remove-btn' type={'button'} onClick={()=>{setDialogOpen(true);}}>
-                                            <FormattedMessage id={TEXT_ID.REMOVE}/>
-                                        </button>
+                                        <Can
+                                            role={authUtils.getRole()}
+                                            perform="delete:users"
+                                            data={{
+                                                userId: userToEdit && userToEdit.email,
+                                                selfId: authUtils.getUsername(),
+                                            }}
+                                            yes={() => (
+                                                <button className='edit-user-remove-btn' type={'button'} onClick={()=>{setDialogOpen(true);}}>
+                                                    <FormattedMessage id={TEXT_ID.REMOVE}/>
+                                                </button>
+                                            )}
+                                        />
                                         <button className={`${loading?'edit-user-save-btn-loading':'edit-user-save-btn'}`} type='submit'>
                                             <FormattedMessage id={TEXT_ID.SAVE}/>
                                         </button>
