@@ -1,7 +1,7 @@
 import React, {Component, FunctionComponent} from 'react';
-import './TabItem.css'
-import {FormattedMessage } from "react-intl";
-import {CircularProgress} from "@material-ui/core";
+import './TabItem.css';
+import {FormattedMessage } from 'react-intl';
+import {CircularProgress} from '@material-ui/core';
 
 type SidebarItemProps = {
     textID:string,
@@ -14,7 +14,7 @@ export const TabItem: FunctionComponent<SidebarItemProps> = ({textID,selected,on
     <div className={`tab-item ${selected ? 'tab-item-selected':'tab-item-unselected'}`} onClick={onClick}>
         <text className='tab-item-text'><FormattedMessage id={textID} /></text>
         {loading && <CircularProgress className='tab-item-loading' size={24}  />}
-    </div>
+    </div>;
 
 
 

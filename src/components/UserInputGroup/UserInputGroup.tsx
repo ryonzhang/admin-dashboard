@@ -1,12 +1,12 @@
 import React, {FormEvent, FunctionComponent, useContext} from 'react';
-import './UserInputGroup.css'
-import {InputField} from "../InputField/InputField";
-import closeIcon from '../../res/images/ic-close.svg'
-import {TEXT_ID} from "../../res/languages/lang";
-import Can from "../../rbac/Can";
-import authUtils from "../../utils/auth";
-import {useFormikContext} from "formik";
-import {CustomContext} from "../../contexts/custom-context";
+import './UserInputGroup.css';
+import {InputField} from '../InputField/InputField';
+import closeIcon from '../../res/images/ic-close.svg';
+import {TEXT_ID} from '../../res/languages/lang';
+import Can from '../../rbac/Can';
+import authUtils from '../../utils/auth';
+import {useFormikContext} from 'formik';
+import {CustomContext} from '../../contexts/custom-context';
 
 type UserInputGroupProps = {
         values:any,
@@ -21,7 +21,7 @@ export const departmentOptionArrayForJuvo:option[] = [{key:'juvo',value:'Juvo'},
 export const departmentOptionArrayForCarrier:option[] = [{key:'admin',value:'Admin'},{key:'customerSupport',value:'Customer Support'}];
 
 const getPrefixedName=(namePrefix:string|undefined|null,name:string)=>{
-        return namePrefix?namePrefix+'.'+name:name;
+    return namePrefix?namePrefix+'.'+name:name;
 };
 
 type option = {
@@ -30,8 +30,8 @@ type option = {
 }
 
 const getOption=(options:option[],key:string)=>{
-        const option=options.find(op=>op.key===key);
-        return option && option.value;
+    const option=options.find(op=>op.key===key);
+    return option && option.value;
 };
 
 export const UserInputGroup: FunctionComponent<UserInputGroupProps> = ({values,errors,deleteable,namePrefix,onDelete,touched}) =>{
@@ -54,5 +54,5 @@ export const UserInputGroup: FunctionComponent<UserInputGroupProps> = ({values,e
             )}
         />
         {deleteable && <img className='user-group-close-icon' src={closeIcon} onClick={onDelete}/>}
-    </div>
-}
+    </div>;
+};

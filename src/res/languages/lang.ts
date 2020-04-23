@@ -1,7 +1,7 @@
-import en from './en.json'
-import es_CL from './es-CL.json'
+import en from './en.json';
+import es_CL from './es-CL.json';
 
-export const textPool = {en,'es-CL':es_CL}
+export const textPool = {en,'es-CL':es_CL};
 
 export enum TEXT_ID  {
     CONFIRM = 'TEXT_ID_CONFIRM',

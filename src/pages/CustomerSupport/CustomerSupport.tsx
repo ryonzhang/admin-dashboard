@@ -1,24 +1,24 @@
-import React, {FunctionComponent, useContext, useState} from "react";
-import './CustomerSupport.css'
-import {TabItem} from "../../components/Tab/TabItem/TabItem";
-import {Tab} from "../../components/Tab/Tab";
-import {Table} from "../../components/Table/Table";
-import {Form} from "react-bootstrap";
-import noResultIcon from '../../res/images/illustration-no-results.svg'
-import searchIcon from '../../res/images/illustration-search.svg'
-import starLevelBeginner from '../../res/images/start-level/star-level-beginner.svg'
-import starLevelBronze from '../../res/images/start-level/star-level-bronze.svg'
-import starLevelDiamond from '../../res/images/start-level/star-level-diamond.svg'
-import starLevelGold from '../../res/images/start-level/star-level-gold.svg'
-import starLevelSilver from '../../res/images/start-level/star-level-silver.svg'
-import {Formik} from "formik";
-import {FormattedMessage } from "react-intl";
+import React, {FunctionComponent, useContext, useState} from 'react';
+import './CustomerSupport.css';
+import {TabItem} from '../../components/Tab/TabItem/TabItem';
+import {Tab} from '../../components/Tab/Tab';
+import {Table} from '../../components/Table/Table';
+import {Form} from 'react-bootstrap';
+import noResultIcon from '../../res/images/illustration-no-results.svg';
+import searchIcon from '../../res/images/illustration-search.svg';
+import starLevelBeginner from '../../res/images/start-level/star-level-beginner.svg';
+import starLevelBronze from '../../res/images/start-level/star-level-bronze.svg';
+import starLevelDiamond from '../../res/images/start-level/star-level-diamond.svg';
+import starLevelGold from '../../res/images/start-level/star-level-gold.svg';
+import starLevelSilver from '../../res/images/start-level/star-level-silver.svg';
+import {Formik} from 'formik';
+import {FormattedMessage } from 'react-intl';
 import {TEXT_ID} from '../../res/languages/lang';
-import networkUtils from "../../utils/network";
-import {CustomContext} from "../../contexts/custom-context";
+import networkUtils from '../../utils/network';
+import {CustomContext} from '../../contexts/custom-context';
 import convertUtils from '../../utils/converter';
-import {CircularProgress} from "@material-ui/core";
-import authUtils from "../../utils/auth";
+import {CircularProgress} from '@material-ui/core';
+import authUtils from '../../utils/auth';
 
 const camelcaseKeys = require('camelcase-keys');
 
@@ -76,7 +76,7 @@ const starLevelIconMap:any={
     diamond: starLevelDiamond,
     gold: starLevelGold,
     silver: starLevelSilver,
-}
+};
 
 const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({customerInfo}) =>{
     const [activeTab,setActiveTab]=useState(CUSTOMER_SUPPORT_TABS.BALANCES);
@@ -132,21 +132,21 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
                     <Table indexed={false} IDs={(customerInfo.histories as any[]).map(u=>u.transactionId)} headerTextIDs={[TEXT_ID.CATEGORY,TEXT_ID.PRODUCT_NAME,TEXT_ID.EXPIRATION_DATE,TEXT_ID.EXPIRATION_TIME,TEXT_ID.BALANCES]} rows={[].map(u=>convertUtils.getRowData(u,['title','datetime','pointChange','transactionId']))}/>}
             </div>
         </div>
-    </div>
-}
+    </div>;
+};
 
 
 const NoResult: FunctionComponent<NoResultProps> = () =>
     <div className='customer-support-no-result'>
         <img src={noResultIcon}/>
         <text><FormattedMessage id={TEXT_ID.ZERO_RESULTS_FOUND}/></text>
-    </div>
+    </div>;
 
 const ToSearch: FunctionComponent<ToSearchProps> = () =>
     <div className='customer-support-to-search'>
         <img src={searchIcon}/>
         <text><FormattedMessage id={TEXT_ID.ENTER_CUSTOMER_MSISDN_OR_UUID_TO_START}/></text>
-    </div>
+    </div>;
 
 
 enum CUSTOMER_SUPPORT_STATUS {
@@ -161,7 +161,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
     const [customerSupportStatus,setCustomerSupportStatus] = useState(CUSTOMER_SUPPORT_STATUS.INIT);
     const [loading,setLoading]=useState(false);
     const assignCustomInfoProps = (props:customerInfo)=>{
-        setCustomerInfo(Object.assign(customerInfo,props))
+        setCustomerInfo(Object.assign(customerInfo,props));
         console.log(props);
     };
     const onSearch=async (msisdn:string)=>{
@@ -225,14 +225,14 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                             }}
                         >
                             {({
-                                  handleSubmit,
-                                  handleChange,
-                                  handleBlur,
-                                  values,
-                                  touched,
-                                  isValid,
-                                  errors,
-                              }) => (
+                                handleSubmit,
+                                handleChange,
+                                handleBlur,
+                                values,
+                                touched,
+                                isValid,
+                                errors,
+                            }) => (
                                 <Form noValidate onSubmit={handleSubmit} className='customer-support-form'>
                                     <Form.Group className='customer-support-form-input'>
                                         <Form.Label className='customer-support-form--input-label'><FormattedMessage
@@ -249,7 +249,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                                         />
 
                                         <Form.Control.Feedback className='customer-support-form-input-feedback'
-                                                               type="invalid">
+                                            type="invalid">
                                             {errors.msisdn}
                                         </Form.Control.Feedback>
                                     </Form.Group>
@@ -267,5 +267,5 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
             {customerSupportStatus===CUSTOMER_SUPPORT_STATUS.NO_RESULT && <NoResult/>}
             {customerSupportStatus===CUSTOMER_SUPPORT_STATUS.SUCCESS && <CustomerInformation customerInfo={customerInfo}/>}
         </div>
-    </div>
-}
+    </div>;
+};
