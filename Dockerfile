@@ -1,6 +1,6 @@
 # BUILD
 FROM node:12.4-alpine as build
-ARG BUILD_COMMAND="build"
+ARG BUILD_COMMAND="build-staging"
 
 WORKDIR /usr/src/app
 COPY package.json ./
