@@ -205,6 +205,7 @@ enum CUSTOMER_SUPPORT_STATUS {
 export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({className}) => {
     const [customerInfo,setCustomerInfo]= useState({});
     const [customerSupportStatus,setCustomerSupportStatus] = useState(CUSTOMER_SUPPORT_STATUS.INIT);
+    const context=useContext(CustomContext);
     const [loading,setLoading]=useState(false);
     const assignCustomInfoProps = (props:customerInfo)=>{
         setCustomerInfo(Object.assign(customerInfo,props))
@@ -218,7 +219,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                     targetBackend: 'juvoAdminApis',
                     url: `/customers/${msisdn}`,
                 },
-                authUtils.getCarrier(),
+                authUtils.getCarrier(),context.locale
             ).catch(err=>{console.log(err);setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.NO_RESULT);setLoading(false);}),
             await networkUtils.makeAPICall(
                 {
@@ -229,14 +230,14 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                         limit: 10,
                     },
                 },
-                authUtils.getCarrier(),
+                authUtils.getCarrier(),context.locale
             ),
             await networkUtils.makeAPICall(
                 {
                     targetBackend: 'juvoAdminApis',
                     url: `/customers/${msisdn}/repayments`,
                 },
-                authUtils.getCarrier(),
+                authUtils.getCarrier(),context.locale
             ),
         ];
         Promise.all(tasks)

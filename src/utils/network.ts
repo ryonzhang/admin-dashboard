@@ -27,14 +27,14 @@ interface APIDataProps {
   params?: any;
 }
 
-const getJuvoUpHeaders = () => {
+const getJuvoUpHeaders = (locale?:string) => {
   const authToken = Cookies.get('authToken');
 
   return {
     authorization: `Bearer ${authToken}`,
     'Auth-strategy': 'auth0',
     accept: 'application/json',
-    'accept-Language': 'en',
+    'accept-Language': locale,
   };
 };
 
@@ -57,7 +57,7 @@ const getHostName = (carrier?: string) => {
 
 
 
-const makeAPICall = (apiData: APIDataProps, carrier?: string) => {
+const makeAPICall = (apiData: APIDataProps, carrier?: string, locale?:string) => {
   const { targetBackend, url: path, method, data, params } = apiData;
   let baseURL, headers;
   console.log('apiData: ', apiData);
@@ -68,11 +68,11 @@ const makeAPICall = (apiData: APIDataProps, carrier?: string) => {
       break;
     case 'juvoIq': // TODO: need to verify when working on iq pages
       baseURL = getHostName(carrier);
-      headers = getJuvoUpHeaders();
+      headers = getJuvoUpHeaders(locale);
       break;
     case 'juvoAdminApis':
       baseURL = process.env.REACT_APP_NODE_DOMAIN_NAME;
-      headers = getJuvoUpHeaders();
+      headers = getJuvoUpHeaders(locale);
       break;
   }
   const url = baseURL ? `${baseURL}${path}` : `${path}`;
