@@ -1,20 +1,20 @@
 import axios from 'axios';
-import React, {FunctionComponent, useContext, useState} from "react";
-import './InviteUsers.css'
-import backIcon from '../../res/images/ic-back.svg'
-import addIcon from '../../res/images/ic-add.svg'
-import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
-import {TEXT_ID} from "../../res/languages/lang";
-import {FormattedMessage, IntlContext} from "react-intl";
-import networkUtils from "../../utils/network";
-import {Form} from "react-bootstrap";
-import {CircularProgress} from "@material-ui/core";
-import {UserInputGroup} from "../../components/UserInputGroup/UserInputGroup";
-import {FieldArray, Formik} from "formik";
-import successIcon from "../../res/images/illustration-success.svg";
-import errorIcon from "../../res/images/illustration-error.svg";
-import {InfoModal} from "../../components/InfoModal/InfoModal";
-import authUtils from "../../utils/auth";
+import React, {FunctionComponent, useContext, useState} from 'react';
+import './InviteUsers.css';
+import backIcon from '../../res/images/ic-back.svg';
+import addIcon from '../../res/images/ic-add.svg';
+import {USER_MANAGEMENT_PAGES} from '../UserManagement/UserManagement';
+import {TEXT_ID} from '../../res/languages/lang';
+import {FormattedMessage, IntlContext} from 'react-intl';
+import networkUtils from '../../utils/network';
+import {Form} from 'react-bootstrap';
+import {CircularProgress} from '@material-ui/core';
+import {UserInputGroup} from '../../components/UserInputGroup/UserInputGroup';
+import {FieldArray, Formik} from 'formik';
+import successIcon from '../../res/images/illustration-success.svg';
+import errorIcon from '../../res/images/illustration-error.svg';
+import {InfoModal} from '../../components/InfoModal/InfoModal';
+import authUtils from '../../utils/auth';
 
 
 
@@ -53,7 +53,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
     });
     return <div className={`invite-users ${className}`} onClick={()=>{closeAllModals();if(isSuccessModalOpen)onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);}}>
         <div className='invite-users-title' onClick={() => {
-            onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST)
+            onSetActivePage(USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST);
         }}>
             <img className='invite-users-icon' src={backIcon}/>
             <text className='invite-users-title-text'><b><FormattedMessage id={TEXT_ID.RETURN_TO_USER_MANAGEMENT}/></b>
@@ -70,19 +70,19 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                     await axios
                         .all(values.users.map((user:any)=>{return networkUtils
                             .makeAPICall({
-                                    targetBackend: 'juvoAdminApis',
-                                    url: `/user-mgmt/add-user`,
-                                    method: 'POST',
-                                    data: {...user,carrier:authUtils.getCarrier()},
-                                },
-                                authUtils.getCarrier(),
+                                targetBackend: 'juvoAdminApis',
+                                url: '/user-mgmt/add-user',
+                                method: 'POST',
+                                data: {...user,carrier:authUtils.getCarrier()},
+                            },
+                            authUtils.getCarrier(),
                             )
                             .catch((error:any) => {
                                 console.log('createUser error', error);
                                 hasErrorOccurred = true;
                                 usersWithError.push(user.email);
                                 setErrorModalOpen(true);
-                            })
+                            });
                         }))
                         .then((res:any[]) => {
                             if(!usersWithError.length)setSuccessModalOpen(true);
@@ -100,15 +100,15 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                 }
                 }>
                 {({
-                      handleSubmit,
-                      handleChange,
-                      handleBlur,
-                      values,
-                      setFieldValue,
-                      touched,
-                      isValid,
-                      errors,
-                  }) => (
+                    handleSubmit,
+                    handleChange,
+                    handleBlur,
+                    values,
+                    setFieldValue,
+                    touched,
+                    isValid,
+                    errors,
+                }) => (
                     <div className='invite-users-panel'>
                         <Form>
                             <div className='invite-users-panel-title'>
@@ -125,7 +125,7 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
                                     <div>
                                         {values.users.map((user, index) => (
                                             <div key={index}>
-                                                <UserInputGroup namePrefix={`users[${index}]`} values={user} errors={(errors.users||[])[index]} touched={(touched.users||[])[index]} deleteable={values.users.length>1} onDelete={()=>{arrayHelpers.remove(index)}}/>
+                                                <UserInputGroup namePrefix={`users[${index}]`} values={user} errors={(errors.users||[])[index]} touched={(touched.users||[])[index]} deleteable={values.users.length>1} onDelete={()=>{arrayHelpers.remove(index);}}/>
                                             </div>
                                         ))}
                                         <div className='invite-users-add-more' onClick={() => {arrayHelpers.push({firstName:'',lastName:'',email:'',department:'' });}}>
@@ -142,5 +142,5 @@ export const InviteUsers: FunctionComponent<InviteUsersProps> = ({onSetActivePag
         </div>
         <InfoModal open={isSuccessModalOpen} icon={successIcon} titleTextID={TEXT_ID.YOU_VE_SUCCESSFULLY_INVITED_NEW_USERS} />
         <InfoModal open={isErrorModalOpen} icon={errorIcon} titleTextID={TEXT_ID.THE_USERS_YOU_INTENDED_TO_ADD_ALREADY_EXIST_IN_THE_SYSTEM} values={usersString}/>
-    </div>
-}
+    </div>;
+};

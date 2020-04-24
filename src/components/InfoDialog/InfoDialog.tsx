@@ -7,8 +7,8 @@ import {
     DialogActions,
     Button,
     CircularProgress
-} from "@material-ui/core";
-import {FormattedMessage} from "react-intl";
+} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
 import './InfoDialog.css';
 
 type InfoDialogProps = {
@@ -45,4 +45,4 @@ export const InfoDialog: FunctionComponent<InfoDialogProps> = ({open,titleTextID
                 <FormattedMessage id={confirmTextID}/>
             </Button>
         </DialogActions>
-    </Dialog>
+    </Dialog>;
