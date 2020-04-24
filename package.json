@@ -34,7 +34,9 @@
     "build": "react-scripts build",
     "build-staging": "env-cmd -f .env.staging react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "tsc --noEmit && eslint 'src/**/*.{js,ts,tsx}'",
+    "lint:fix": "tsc --noEmit && eslint 'src/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,6 +55,7 @@
   },
   "devDependencies": {
     "@material-ui/icons": "^4.9.1",
+    "eslint": "^6.8.0",
     "webpack": "^4.42.0",
     "webpack-cli": "^3.3.11"
   }
