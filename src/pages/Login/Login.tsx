@@ -1,17 +1,17 @@
-import React, {FunctionComponent, useContext, useState} from "react";
-import './Login.css'
-import signInIcon from '../../res/images/illustration-sign-in.svg'
-import {Formik, useFormik} from "formik";
-import {Form} from "react-bootstrap";
-import {InfoModal} from "../../components/InfoModal/InfoModal";
-import requestSuccessIcon from '../../res/images/ic-landing-success.svg'
-import {TEXT_ID} from "../../res/languages/lang";
-import {FormattedMessage, IntlContext} from "react-intl";
-import {CustomContext} from "../../contexts/custom-context";
-import {AxiosResponse} from "axios";
+import React, {FunctionComponent, useContext, useState} from 'react';
+import './Login.css';
+import signInIcon from '../../res/images/illustration-sign-in.svg';
+import {Formik} from 'formik';
+import {Form} from 'react-bootstrap';
+import {InfoModal} from '../../components/InfoModal/InfoModal';
+import requestSuccessIcon from '../../res/images/ic-landing-success.svg';
+import {TEXT_ID} from '../../res/languages/lang';
+import {FormattedMessage, IntlContext} from 'react-intl';
+import {CustomContext} from '../../contexts/custom-context';
+import {AxiosResponse} from 'axios';
 import networkUtils from '../../utils/network';
-import {CircularProgress} from "@material-ui/core";
-import formUtils from "../../utils/form";
+import {CircularProgress} from '@material-ui/core';
+import formUtils from '../../utils/form';
 
 type LoginProps = {
 }
@@ -46,7 +46,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
         email: yup.string().email(intlContext.formatMessage({id:TEXT_ID.EMAIL_MUST_BE_A_VALID_EMAIL})).required(intlContext.formatMessage({id:TEXT_ID.EMAIL_IS_A_REQUIRED_FIELD})),
     });
     return <CustomContext.Consumer>
-        {({setLocale,validateFormHooks,setValidateFormHooks})=>
+        {({setLocale})=>
             <div className='login' onClick={()=>setModalOpen(false)}>
                 <div className='login-container'>
                     <div className='login-request-email'>
@@ -61,16 +61,15 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                             }}
                         >
                             {({
-                                  handleSubmit,
-                                  handleChange,
-                                  handleBlur,
-                                  values,
-                                  touched,
-                                  isValid,
-                                  errors,
-                                  validateForm,
-                                  setFieldTouched,
-                              }) => (
+                                handleSubmit,
+                                handleChange,
+                                values,
+                                touched,
+                                isValid,
+                                errors,
+                                validateForm,
+                                setFieldTouched,
+                            }) => (
                                 <Form noValidate onSubmit={handleSubmit} className='login-form'>
                                     <Form.Group className='login-form-input'>
                                         <Form.Label className='login-form-input-label'><FormattedMessage id={TEXT_ID.ENTER_YOUR_EMAIL_ADDRESS}/></Form.Label>
@@ -80,7 +79,7 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                                             placeholder="your-email@your-domain.com"
                                             name="email"
                                             value={values.email}
-                                            onChange={(e:any)=>{handleChange(e);setFieldTouched('email',true);formUtils.revalidateLogin(validateForm)}}
+                                            onChange={(e:any)=>{handleChange(e);setFieldTouched('email',true);formUtils.revalidateLogin(validateForm);}}
                                             isInvalid={!!errors.email}
                                         />
 
@@ -108,6 +107,6 @@ export const Login: FunctionComponent<LoginProps> = () =>{
                 <InfoModal open={isModalOpen} icon={requestSuccessIcon} titleTextID={TEXT_ID.SUCCESSFULLY_REQUESTED_LINK} subtitleTextID={TEXT_ID.WE_SENT_YOU_THE_LINK_VIA_EMAIL}/>
             </div>
         }
-    </CustomContext.Consumer>
-}
+    </CustomContext.Consumer>;
+};
 

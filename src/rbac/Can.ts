@@ -1,32 +1,36 @@
-import rules from './rules'
+import rules from './rules';
 
 const check = (rules:any, role:any, action:any, data:any) => {
     const permissions:any = rules[role];
     if (!permissions) {
-        return false
+        return false;
     }
 
     const staticPermissions = permissions.static;
 
     if (staticPermissions && staticPermissions.includes(action)) {
-        return true
+        return true;
     }
 
     const dynamicPermissions = permissions.dynamic;
 
     if (dynamicPermissions) {
-        const permissionCondition = dynamicPermissions[action]
+        const permissionCondition = dynamicPermissions[action];
         if (!permissionCondition) {
-            return false
+            return false;
         }
 
-        return permissionCondition(data)
+        return permissionCondition(data);
     }
-    return false
-}
+    return false;
+};
+
+export const can=(role:any, action:any, data:any)=>{
+    return check(rules, role, action, data);
+};
 
 const Can = (props:any) =>
-    check(rules, props.role, props.perform, props.data) ? props.yes() : props.no()
+    check(rules, props.role, props.perform, props.data) ? props.yes() : props.no();
 
 Can.defaultProps = {
     yes: () => null,

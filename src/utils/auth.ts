@@ -1,11 +1,11 @@
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 
 const setUser=(user:any)=>{
     Cookies.set('user', user);
 };
 
 const getUser=()=>{
-    return JSON.parse(Cookies.get('user') as string)
+    return JSON.parse(Cookies.get('user') as string);
 };
 
 const getCarrier=()=>{
@@ -18,10 +18,6 @@ const getRole=()=>{
 
 const getUsername=()=>{
     return (getUser() as any)['username'];
-};
-
-const getUserId=()=>{
-    return (getUser() as any)['userId'];
 };
 
 
@@ -53,5 +49,4 @@ export default {
     getCarrier,
     getRole,
     getUsername,
-    getUserId,
 };
