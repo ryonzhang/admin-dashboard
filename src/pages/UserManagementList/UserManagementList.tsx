@@ -1,14 +1,14 @@
-import React, {FunctionComponent,useEffect,useState,useContext} from "react";
+import React, {FunctionComponent,useEffect,useState,useContext} from 'react';
 import './UserManagementList.css';
-import {TabItem} from "../../components/Tab/TabItem/TabItem";
-import {Tab} from "../../components/Tab/Tab";
-import {Table} from "../../components/Table/Table";
-import {USER_MANAGEMENT_PAGES} from "../UserManagement/UserManagement";
-import {FormattedMessage } from "react-intl";
+import {TabItem} from '../../components/Tab/TabItem/TabItem';
+import {Tab} from '../../components/Tab/Tab';
+import {Table} from '../../components/Table/Table';
+import {USER_MANAGEMENT_PAGES} from '../UserManagement/UserManagement';
+import {FormattedMessage } from 'react-intl';
 import {TEXT_ID} from '../../res/languages/lang';
-import networkUtils from "../../utils/network";
+import networkUtils from '../../utils/network';
 import convertUtils from '../../utils/converter';
-import authUtils from "../../utils/auth";
+import authUtils from '../../utils/auth';
 type UserManagementProps = {
     onSetActivePage: Function,
     onSetUserToEdit: Function,
@@ -56,7 +56,7 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
             .makeAPICall(
                 {
                     targetBackend: 'juvoAdminApis',
-                    url: `/user-mgmt/get-users`,
+                    url: '/user-mgmt/get-users',
                     params: { q: `identities.connection:${connectionType}` }, // q params allow switching between email or db
                 },
                 authUtils.getCarrier()
@@ -74,13 +74,13 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
             })
             .catch((error) => {
                 console.error('getUsers error: ', error);
-               setLoading(false);
-            })},[refreshListTimestamp]
+                setLoading(false);
+            });},[refreshListTimestamp]
     );
     return <div className={`user-management-list ${className}`}>
         <div className='user-management-list-title'>
             <text className='user-management-list-title-text' onClick={()=>console.log(activeUsers)}><b><FormattedMessage id={TEXT_ID.USER_MANAGEMENT}/></b></text>
-            <button className='user-management-list-invite-btn' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.INVITE_USERS)}}>
+            <button className='user-management-list-invite-btn' onClick={()=>{onSetActivePage(USER_MANAGEMENT_PAGES.INVITE_USERS);}}>
                 <FormattedMessage id={TEXT_ID.INVITE_NEW_USERS}/>
             </button>
         </div>
@@ -91,9 +91,9 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
                     <TabItem textID={TEXT_ID.PENDING_USERS} selected={activeTab===USER_MANAGEMENT_TABS.PENDING_USERS} onClick={()=>setActiveTab(USER_MANAGEMENT_TABS.PENDING_USERS)} loading={loading}/>
                 </Tab>
                 {activeTab===USER_MANAGEMENT_TABS.ACTIVE_USERS?<Table indexed={true} IDs={(activeUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE,TEXT_ID.LAST_LOGIN,TEXT_ID.TIME]} rows={activeUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole','last_login_date','last_login_time']))} actionTextID={TEXT_ID.EDIT} action={action}/>:
-                <Table indexed={true} IDs={(pendingUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE]} rows={pendingUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
+                    <Table indexed={true} IDs={(pendingUsers as any[]).map(u=>u.user_id)} headerTextIDs={[TEXT_ID.FULL_NAME,TEXT_ID.EMAIL,TEXT_ID.ROLE]} rows={pendingUsers.map(u=>convertUtils.getRowData(u,['name','email','primaryRole']))} actionTextID={TEXT_ID.EDIT} action={action}/>}
             </div>
         </div>
-    </div>
-}
+    </div>;
+};
 

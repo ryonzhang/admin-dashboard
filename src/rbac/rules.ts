@@ -1,6 +1,6 @@
 const userNotSelf = ({ selfId, userId }:{selfId?:string,userId?:string}) => {
     if (!userId || !selfId) return false;
-    return userId !== selfId
+    return userId !== selfId;
 };
 
 const rules = {
@@ -30,4 +30,4 @@ const rules = {
     },
 };
 
-export default rules
+export default rules;
