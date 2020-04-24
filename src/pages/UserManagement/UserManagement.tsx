@@ -1,8 +1,8 @@
-import React, {FunctionComponent, useState, useContext} from 'react';
-import './UserManagement.css';
-import {UserManagementList} from '../UserManagementList/UserManagementList';
-import {InviteUsers} from '../InviteUsers/InviteUsers';
-import {EditUser} from '../EditUser/EditUser';
+import React, {FunctionComponent, useState, useContext} from "react";
+import './UserManagement.css'
+import {UserManagementList} from "../UserManagementList/UserManagementList";
+import {InviteUsers} from "../InviteUsers/InviteUsers";
+import {EditUser} from "../EditUser/EditUser";
 
 type UserManagementProps = {
     className:string
@@ -23,6 +23,6 @@ export const UserManagement: FunctionComponent<UserManagementProps> = ({classNam
         <UserManagementList className={(activePage === USER_MANAGEMENT_PAGES.USER_MANAGEMENT_LIST || 'user-management-hidden') as string} refreshListTimestamp={refreshListTimestamp} onSetActivePage={setActivePage} onSetUserToEdit={setUserToEdit}/>
         <InviteUsers className={(activePage === USER_MANAGEMENT_PAGES.INVITE_USERS || 'user-management-hidden') as string} setRefreshTimestamp={setRefreshListTimestamp} onSetActivePage={setActivePage}/>
         {activePage === USER_MANAGEMENT_PAGES.EDIT_USER && <EditUser setRefreshTimestamp={setRefreshListTimestamp} onSetActivePage={setActivePage} userToEdit={userToEdit} />}
-    </div>;
+    </div>
 
-};
+}

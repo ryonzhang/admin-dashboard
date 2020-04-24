@@ -5,9 +5,9 @@ import userManagement from './icon-white-user-management.svg';
 import customerSupport from './icon-white-customer-support.svg';
 
 export default {
-    healthIndex,
-    policyServices,
-    audienceInsight,
-    userManagement,
-    customerSupport,
+  healthIndex,
+  policyServices,
+  audienceInsight,
+  userManagement,
+  customerSupport,
 };
