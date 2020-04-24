@@ -1,7 +1,6 @@
 {
     "env": {
         "browser": true,
-        "node": true,
         "es6": true
     },
     "extends": [
@@ -41,30 +40,11 @@
         "semi": [
             "error",
             "always"
-        ],
-        "react/prop-types": [
-            0
         ]
     },
     "settings": {
         "react": {
           "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
         }
-    },
-    "overrides": [
-        {
-            "files": [
-                "*.ts", 
-                "*.tsx"
-            ],
-            "rules": {
-                "@typescript-eslint/no-unused-vars": [
-                    2, 
-                    { 
-                        "args": "none" 
-                    }
-                ]
-            }
-        }
-    ]
+      }
 }
