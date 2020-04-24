@@ -58,6 +58,7 @@ type history = {
 type customerInfo={
     msisdn?: string,
     level?: string,
+    currentLevel?: string,
     points?: number,
     airtimeBalance?:number,
     loanBalance?:number,
@@ -88,7 +89,7 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
         setErrorModalOpen(false);
     };
     const onCancel=async ()=>{
-        console.log(authUtils.getUser());
+        console.log(customerInfo);
         setLoading(true);
         return await networkUtils
             .makeAPICall(
@@ -132,7 +133,7 @@ const CustomerInformation : FunctionComponent<CustomerInformationProps> = ({cust
                 </div>
                 <div className='customer-support-panel-container-balance'>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance customer-support-panel-right-bar'>
-                        <text className='customer-support-panel-text'>{customerInfo.level} <img className='customer-support-star-level-icon' src={starLevelIconMap[(customerInfo.level as string).toLowerCase()]}/></text>
+                        <text className='customer-support-panel-text'>{customerInfo.level} <img className='customer-support-star-level-icon' src={starLevelIconMap[(customerInfo.currentLevel as string).toLowerCase()]}/></text>
                         <text className='customer-support-panel-subtitle'><FormattedMessage id={TEXT_ID.LEVEL}/></text>
                     </div>
                     <div className='customer-support-panel-container customer-support-panel-subcontainer-balance'>
@@ -246,7 +247,7 @@ export const CustomerSupport: FunctionComponent<CustomerSupportProps> = ({classN
                     const histories = camelcaseKeys(historyResponse.data,{deep: true});
                     (histories as history[]).forEach(history=>history.datetime=convertUtils.dateTimeFormatter(history.datetime));
                     const {status} = camelcaseKeys(repaymentStatusResponse.data,{deep: true});
-                    assignCustomInfoProps({msisdn,airtimeBalance:balances[0].amount,loanBalance:balances[1].amount,level:account.level,points:account.points,histories,repaidStatus:status});
+                    assignCustomInfoProps({msisdn,airtimeBalance:balances[0].amount,loanBalance:balances[1].amount,level:account.level,currentLevel:account.currentLevel,points:account.points,histories,repaidStatus:status});
                     setCustomerSupportStatus(CUSTOMER_SUPPORT_STATUS.SUCCESS);
                 }
                 setLoading(false);
