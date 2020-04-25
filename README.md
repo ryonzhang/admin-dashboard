@@ -6,6 +6,7 @@ This project is designed to provide up-to-date clients-related information to th
 - [Juvo Admin Dashboard](#juvo-admin-dashboard)
   * [Design Page](#design-page)
   * [Jira board](#jira-board)
+  * [Demo Page](#demo-page)
   * [How to Run this Project](#how-to-run-this-project)
   * [Folder structure](#folder-structure)
   * [Key File Structure](#key-file-structure)
@@ -39,6 +40,9 @@ https://app.zeplin.io/project/5c659a2ba981283c0b88f669
 
 ### Jira board
 https://juvomobile.atlassian.net/jira/software/projects/BO/boards/193
+
+### Demo Page
+Staging Environment is CICD ready for demo at https://staging-dashboard.juvo.com/ ,Please contact Ruiyang Zhang(Slack ID) to invite you for testing.
 
 ### How to Run this Project
 
