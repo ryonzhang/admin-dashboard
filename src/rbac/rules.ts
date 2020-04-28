@@ -10,7 +10,8 @@ const rules = {
         static: [
             'view:user-management',
             'view:customer-support',
-            'assign:juvo-role'
+            'assign:juvo-role',
+            'view:juvo-role',
         ],
         dynamic: {
             'delete:users': userNotSelf,
@@ -21,7 +22,7 @@ const rules = {
     admin: {
         static: [
             'view:user-management',
-            'view:customer-support'
+            'view:customer-support',
         ],
         dynamic: {
             'delete:users': userNotSelf,

@@ -25,7 +25,7 @@ const check = (rules:any, role:any, action:any, data:any) => {
     return false;
 };
 
-export const can=(role:any, action:any, data:any)=>{
+export const can=(role:any, action:any, data?:any)=>{
     return check(rules, role, action, data);
 };
 

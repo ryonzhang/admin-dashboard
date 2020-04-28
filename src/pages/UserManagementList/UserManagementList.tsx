@@ -9,6 +9,7 @@ import {TEXT_ID} from '../../res/languages/lang';
 import networkUtils from '../../utils/network';
 import convertUtils from '../../utils/converter';
 import authUtils from '../../utils/auth';
+import {can} from "../../rbac/Can";
 type UserManagementProps = {
     onSetActivePage: Function,
     onSetUserToEdit: Function,
@@ -64,9 +65,11 @@ export const UserManagementList: FunctionComponent<UserManagementProps> = ({onSe
             .then((response) => {
                 if (response.status === 200) {
                     //TODO:camelize keys
-                    const userData = response.data;
-                    (userData as any[]).forEach(user=>user.last_login_date=convertUtils.dateFormatter(user.last_login));
-                    (userData as any[]).forEach(user=>user.last_login_time=convertUtils.timeFormatter(user.last_login));
+                    let userData = response.data;
+                    (userData as any[]).forEach(user=>{user.last_login_date=convertUtils.dateFormatter(user.last_login);user.last_login_time=convertUtils.timeFormatter(user.last_login);});
+                    if(!can(authUtils.getRole(),'view:juvo-role')){
+                        userData=userData.filter((user:any) => user.user_metadata.department!=='juvo');
+                    }
                     setActiveUsers(userData.filter((user:any) => user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
                     setPendingUsers(userData.filter((user: any) => !user.email_verified).map((user:any)=>{Object.keys(user.user_metadata).forEach((key:any)=>user[key]=user.user_metadata[key]);return user;}));
                     setLoading(false);
